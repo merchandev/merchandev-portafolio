@@ -1,0 +1,9 @@
+/*
+Theme Name: Portafolio Merchan.Dev
+Theme URI: https://merchan.dev
+Author: Merchan.Dev | Arturo Merchán
+Author URI: https://merchan.dev/temas/portafolio/
+Description: Tema WordPress de alto rendimiento construido desde cero en PHP 8+, sin dependencias de page builders ni frameworks CSS externos. Arquitectura orientada a Custom Post Types (CPT) con registro dinámico vía WP_Query, template hierarchy nativa y encolado de assets gestionado por wp_enqueue_scripts. Frontend en Vanilla JS (ES2022) con IntersectionObserver para animaciones scroll-reveal, canvas WebGL para el fondo de partículas interactivo y fetch API con Promise.all para integración paralela con la API REST de GitHub. Diseño system basado en CSS Custom Properties, layout con CSS Grid y Flexbox, tipografía de Google Fonts (Orbitron + Inter) y glassmorphism con backdrop-filter. SEO estructural con wp_localize_script, meta tags semánticos, Open Graph y compatibilidad completa con Yoast SEO. Rendimiento optimizado: cero jQuery, cero Elementor, cero WooCommerce overhead.
+Version: 1.5.6
+Text Domain: portafolio-arturo
+*/

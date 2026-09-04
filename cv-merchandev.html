@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV - Arturo Merchán - Merchan.Dev</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        :root {
+            --color-goku-orange: #f97316;
+            --color-ssj-yellow: #eab308;
+            --color-vegeta-blue: #2563eb;
+            --color-bg-dark: #020617;
+            --color-bg-card: rgba(30, 41, 59, 0.4);
+            --color-text-main: #f8fafc;
+            --color-text-muted: #cbd5e1;
+            --color-border: rgba(255, 255, 255, 0.05);
+            --font-heading: 'Orbitron', system-ui, sans-serif;
+            --font-body: 'Inter', system-ui, sans-serif;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-bg-dark);
+            color: var(--color-text-main);
+            margin: 0;
+            padding: 0;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .cv-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px;
+            background-color: var(--color-bg-dark);
+        }
+
+        h1, h2, h3, h4 {
+            font-family: var(--font-heading);
+            margin: 0;
+        }
+
+        /* HEADER */
+        .cv-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--color-goku-orange);
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+
+        .cv-header-left h1 {
+            font-size: 2.5rem;
+            color: var(--color-text-main);
+        }
+
+        .cv-header-left h1 span {
+            color: var(--color-goku-orange);
+        }
+
+        .cv-header-left h2 {
+            font-size: 1.2rem;
+            color: var(--color-text-muted);
+            margin-top: 5px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .cv-contact {
+            text-align: right;
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+        }
+
+        .cv-contact p {
+            margin: 5px 0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+
+        .cv-contact i {
+            color: var(--color-goku-orange);
+            font-size: 1.2rem;
+        }
+
+        /* PROFILE */
+        .cv-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            color: var(--color-goku-orange);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            font-size: 1.8rem;
+        }
+
+        .profile-text {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--color-text-muted);
+            background: var(--color-bg-card);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+        }
+
+        /* GRID LAYOUT */
+        .cv-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        /* EXPERIENCE */
+        .timeline-item {
+            margin-bottom: 20px;
+            padding-left: 20px;
+            border-left: 2px solid var(--color-border);
+            position: relative;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -6px;
+            top: 5px;
+            width: 10px;
+            height: 10px;
+            background: var(--color-goku-orange);
+            border-radius: 50%;
+        }
+
+        .timeline-title {
+            font-size: 1.1rem;
+            color: var(--color-text-main);
+            font-weight: 600;
+        }
+
+        .timeline-company {
+            font-size: 0.95rem;
+            color: var(--color-ssj-yellow);
+            margin: 3px 0;
+        }
+
+        .timeline-date {
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 3px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .timeline-desc {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* STACK & EDU */
+        .side-card {
+            background: var(--color-bg-card);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            margin-bottom: 20px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .tags span {
+            background: rgba(249, 115, 22, 0.1);
+            color: var(--color-goku-orange);
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .edu-item {
+            margin-bottom: 15px;
+        }
+        
+        .edu-item h4 {
+            font-size: 0.95rem;
+            color: var(--color-ssj-yellow);
+            margin-bottom: 2px;
+        }
+        
+        .edu-item p {
+            margin: 0;
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        @media print {
+            body { background-color: #020617 !important; color: white !important; }
+            .cv-container { padding: 0; }
+            .profile-text, .side-card { border-color: rgba(255,255,255,0.1) !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="cv-container">
+    
+    <header class="cv-header">
+        <div class="cv-header-left">
+            <img src="./assets/image/LOGO2026 - MERCHAN.DEV.png" alt="Merchan.Dev Logo" style="height: 60px; width: auto; object-fit: contain;">
+            <h2 style="margin-top: 10px;">Programador Full-Stack</h2>
+        </div>
+        <div class="cv-contact">
+            <p>contacto@merchan.dev <i class='bx bx-envelope'></i></p>
+            <p>merchandev <i class='bx bxl-github'></i></p>
+            <p>Venezuela <i class='bx bx-map'></i></p>
+        </div>
+    </header>
+
+    <section class="cv-section">
+        <div class="profile-text">
+            Soy Arturo Merchán, Programador Full-Stack con más de 10 años de experiencia en desarrollo web. Me especializo en el ecosistema de WordPress, PHP, y desarrollo de bases de datos, combinando habilidades en frontend (TypeScript, Tailwind CSS) y backend para crear soluciones tecnológicas a medida. Mi enfoque se centra en la implementación de diseños precisos, optimización de rendimiento (SEO técnico) y la entrega puntual bajo un modelo de trabajo estructurado y eficiente.
+        </div>
+    </section>
+
+    <div class="cv-grid">
+        <!-- LEFT COLUMN: EXPERIENCE -->
+        <div class="cv-main">
+            <section class="cv-section">
+                <h3 class="section-title"><i class='bx bx-briefcase-alt-2'></i> Experiencia Profesional</h3>
+                
+                <div class="timeline-item">
+                    <div class="timeline-title">Programador Full Stack</div>
+                    <div class="timeline-company">Me Transfers (Barcelona, España)</div>
+                    <div class="timeline-date">Dic. 2025 – Presente</div>
+                    <p class="timeline-desc">Desarrollo y mantenimiento de un sistema de reservas especializado para traslados y tours desde y hacia Barcelona.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-title">Desarrollador Web</div>
+                    <div class="timeline-company">Motores Morichal (Maturín, Venezuela)</div>
+                    <div class="timeline-date">Ago. 2025 – Presente</div>
+                    <p class="timeline-desc">Desarrollo integral del tema para el sitio web, incluyendo la implementación de plugins personalizados para formularios y la administración del inventario de vehículos.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-title">Programador Full Stack & Cofundador</div>
+                    <div class="timeline-company">Espressivo Venezuela (Maturín, Venezuela)</div>
+                    <div class="timeline-date">Oct. 2018 – Presente</div>
+                    <p class="timeline-desc">Cofundador de la marca, encargado de proveer soluciones tecnológicas integrales y personalizadas para clientes.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-title">Desarrollador Full Stack WordPress</div>
+                    <div class="timeline-company">Panalcom (Colombia)</div>
+                    <div class="timeline-date">Mar. 2025 – Nov. 2025</div>
+                    <p class="timeline-desc">Desarrollo de soluciones web personalizadas B2B, levantamiento de servidores, y configuración de entornos seguros. Creación de plugins/temas a medida e integración de CRMs.</p>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-title">Desarrollador Web</div>
+                    <div class="timeline-company">Academy Producciones (México)</div>
+                    <div class="timeline-date">Mar. 2020 – Feb. 2025</div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-title">Diseñador de Páginas Web</div>
+                    <div class="timeline-company">Neuropublicidad (Chile)</div>
+                    <div class="timeline-date">Feb. 2017 – Feb. 2020</div>
+                    <p class="timeline-desc">Desarrollo de E-commerce en WordPress utilizando WooCommerce y gestión estratégica de campañas en Google Ads.</p>
+                </div>
+            </section>
+        </div>
+
+        <!-- RIGHT COLUMN: STACK & EDU -->
+        <div class="cv-sidebar">
+            <section class="cv-section">
+                <h3 class="section-title"><i class='bx bx-code-alt'></i> Stack Técnico</h3>
+                
+                <div class="side-card">
+                    <div style="color: var(--color-text-main); font-size: 0.9rem; font-weight: 600;">Front-End</div>
+                    <div class="tags">
+                        <span>TypeScript</span><span>React</span><span>Astro</span><span>JavaScript</span><span>Tailwind</span><span>HTML/CSS</span>
+                    </div>
+                </div>
+                
+                <div class="side-card">
+                    <div style="color: var(--color-text-main); font-size: 0.9rem; font-weight: 600;">Back-End & Data</div>
+                    <div class="tags">
+                        <span>PHP</span><span>Python</span><span>MySQL</span><span>MongoDB</span>
+                    </div>
+                </div>
+
+                <div class="side-card">
+                    <div style="color: var(--color-text-main); font-size: 0.9rem; font-weight: 600;">DevOps & Tools</div>
+                    <div class="tags">
+                        <span>Docker</span><span>Linux</span><span>Bash</span><span>Git</span><span>Nginx</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="cv-section">
+                <h3 class="section-title"><i class='bx bxs-graduation'></i> Educación</h3>
+                
+                <div class="side-card">
+                    <div class="edu-item">
+                        <h4>Diplomado en Database Developer</h4>
+                        <p>Diplomados online | 2026</p>
+                    </div>
+                    <div class="edu-item">
+                        <h4>Máster SEO</h4>
+                        <p>BIG school | 2026</p>
+                    </div>
+                    <div class="edu-item">
+                        <h4>Máster de Desarrollo con IA</h4>
+                        <p>BIG school | 2026</p>
+                    </div>
+                    <div class="edu-item">
+                        <h4>Máster de Funnel de Ventas</h4>
+                        <p>BIG school | 2026</p>
+                    </div>
+                    <div class="edu-item">
+                        <h4>Mastering Laravel and PHP</h4>
+                        <p>Coursera | 2020 - 2023</p>
+                    </div>
+                    <div class="edu-item">
+                        <h4>Full Stack con WordPress</h4>
+                        <p>Platzi | 2023</p>
+                    </div>
+                    <div class="edu-item">
+                        <h4>Licenciado en Contaduría</h4>
+                        <p>Univ. de Oriente (VE) | 2015 - 2022</p>
+                    </div>
+                    <div class="edu-item" style="margin-bottom:0;">
+                        <h4>Web Development | Front-End</h4>
+                        <p>CodePath | 2020</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
