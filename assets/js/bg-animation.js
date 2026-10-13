@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    let frame = null;
 
     let width, height;
     let particles = [];
@@ -54,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const dx = mouse.x - this.x;
                 const dy = mouse.y - this.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < mouse.radius) {
+                if (distance > 0 && distance < mouse.radius) {
                     const forceDirectionX = dx / distance;
                     const forceDirectionY = dy / distance;
                     const force = (mouse.radius - distance) / mouse.radius;
@@ -146,11 +148,18 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.fillRect(0, 0, width, height);
 
 
-        requestAnimationFrame(animate);
+        frame = requestAnimationFrame(animate);
     }
 
     // Respect user's reduced motion preference
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const updateMotion = () => {
+        if (frame !== null) { cancelAnimationFrame(frame); frame = null; }
+        if (!document.hidden && !prefersReducedMotion.matches) animate();
+    };
+    document.addEventListener('visibilitychange', updateMotion);
+    prefersReducedMotion.addEventListener('change', updateMotion);
+    window.addEventListener('resize', init);
     if (!prefersReducedMotion.matches) {
         init();
         animate();

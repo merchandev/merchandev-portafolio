@@ -21,7 +21,7 @@ get_header(); ?>
                 <span class="section-tag">Artículos y Tutoriales</span>
                 <h1 class="section-title">El Blog</h1>
                 <p class="section-subtitle mx-auto">Explorando el desarrollo Full-Stack, infraestructuras en la nube, y las mejores prácticas en el ecosistema digital.</p>
-                
+
                 <!-- Buscador AJAX -->
                 <div style="max-width: 600px; margin: 2rem auto 0; position: relative; text-align: left; z-index: 50;">
                     <div style="display: flex; align-items: center; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 50px; padding: 0.5rem 1.5rem; backdrop-filter: blur(10px);">
@@ -42,7 +42,7 @@ get_header(); ?>
     <!-- ========================================== -->
     <section class="section-padding" style="padding-top: 0;">
         <div class="container">
-            
+
             <style>
                 /* Layout para mover el menú de años en móvil */
                 .blog-years-content-wrapper {
@@ -131,17 +131,17 @@ get_header(); ?>
             </style>
 
             <div class="blog-years-content-wrapper">
-                
+
                 <!-- Menú de Años -->
                 <div class="years-filter-menu-container" id="years-filter-menu">
-                    <?php 
-                    $current_year = isset($_GET['filtro_ano']) ? intval($_GET['filtro_ano']) : 2026;
-                    $years = array(2026, 2025, 2024, 2023, 2022, 2021, 2020);
-                    foreach($years as $y) : 
+                    <?php
+                    $current_year = isset($_GET['filtro_ano']) ? absint($_GET['filtro_ano']) : 0;
+                    $years = array_merge(array(0), range((int) wp_date('Y'), 2020));
+                    foreach($years as $y) :
                         $active_class = ($current_year === $y) ? 'active' : '';
                     ?>
                         <button class="year-filter-btn <?php echo $active_class; ?>" data-year="<?php echo $y; ?>" style="padding: 10px 24px; border-radius: 50px; background: rgba(255,255,255,0.05); color: var(--color-text-main); border: 1px solid rgba(255,255,255,0.1); cursor: pointer; font-weight: 600; font-size: 1rem; transition: all 0.3s ease;">
-                            <?php echo $y; ?>
+                            <?php echo $y ? esc_html($y) : 'Todos'; ?>
                         </button>
                     <?php endforeach; ?>
                 </div>
@@ -173,15 +173,15 @@ get_header(); ?>
                             </a>
                         <?php endwhile; ?>
                     </div>
-                    
+
                     <div class="mt-5 text-center" id="blog-pagination">
-                        <?php 
+                        <?php
                         the_posts_pagination( array(
                             'mid_size'  => 2,
                             'prev_text' => __( 'Anterior', 'textdomain' ),
                             'next_text' => __( 'Siguiente', 'textdomain' ),
                             'screen_reader_text' => __( 'Más artículos', 'textdomain' ),
-                        ) ); 
+                        ) );
                         ?>
                     </div>
                 <?php else : ?>
@@ -199,6 +199,7 @@ get_header(); ?>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    const escapeText = value => { const node = document.createElement('span'); node.textContent = String(value); return node.innerHTML; };
     // ----------------------------------------------------
     // LÓGICA DE BÚSQUEDA AJAX
     // ----------------------------------------------------
@@ -232,9 +233,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         resultsContainer.innerHTML = '';
                         data.data.forEach(item => {
                             resultsContainer.innerHTML += `
-                                <a href="${item.url}" style="display: flex; align-items: flex-start; padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.05); text-decoration: none; color: var(--color-text-main); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
+                                <a href="${escapeText(item.url)}" style="display: flex; align-items: flex-start; padding: 20px 24px; border-bottom: 1px solid rgba(255,255,255,0.05); text-decoration: none; color: var(--color-text-main); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.background='transparent'">
                                     <span class="material-symbols-outlined" style="margin-right: 16px; margin-top: 2px; color: var(--color-goku-orange); font-size: 1.8rem; flex-shrink: 0;">article</span>
-                                    <span style="font-weight: 500; font-size: 1.2rem; line-height: 1.4; text-align: left;">${item.title}</span>
+                                    <span style="font-weight: 500; font-size: 1.2rem; line-height: 1.4; text-align: left;">${escapeText(item.title)}</span>
                                 </a>
                             `;
                         });
@@ -261,15 +262,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const yearButtons = document.querySelectorAll('.year-filter-btn');
     const blogGrid = document.getElementById('blog-grid');
     const blogPagination = document.getElementById('blog-pagination');
-    let currentYear = <?php echo isset($_GET['filtro_ano']) ? intval($_GET['filtro_ano']) : 2026; ?>;
+    let currentYear = <?php echo isset($_GET['filtro_ano']) ? absint($_GET['filtro_ano']) : 0; ?>;
 
     function loadBlogPosts(year, paged = 1) {
         if (!blogGrid) return;
-        
+
         // Efecto visual de carga
         blogGrid.classList.add('loading');
         if(blogPagination) blogPagination.style.opacity = '0.5';
-        
+
         const formData = new FormData();
         formData.append('action', 'am_filter_blog');
         formData.append('security', amData.nonce);
@@ -288,7 +289,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     blogPagination.innerHTML = data.data.pagination;
                     blogPagination.style.opacity = '1';
                 }
-                
+
                 // Actualizar URL sin recargar
                 const newUrl = new URL(window.location);
                 newUrl.searchParams.set('filtro_ano', year);
@@ -298,11 +299,11 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(err => console.error('Error fetching blog posts:', err))
         .finally(() => {
             blogGrid.classList.remove('loading');
-            
+
             // Scroll suave hacia el inicio de los artículos (para móviles y escritorio)
             const wrapper = document.getElementById('blog-content-wrapper');
             if(wrapper) {
-                const yOffset = -100; 
+                const yOffset = -100;
                 const y = wrapper.getBoundingClientRect().top + window.pageYOffset + yOffset;
                 window.scrollTo({top: y, behavior: 'smooth'});
             }
@@ -314,7 +315,7 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.addEventListener('click', function() {
             yearButtons.forEach(b => b.classList.remove('active'));
             this.classList.add('active');
-            
+
             const selectedYear = this.getAttribute('data-year');
             currentYear = selectedYear;
             loadBlogPosts(selectedYear, 1);

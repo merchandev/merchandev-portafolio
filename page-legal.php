@@ -18,15 +18,15 @@ get_header(); ?>
                     Última actualización: 8 de mayo de 2026
                 </p>
             </div>
-            
+
             <div class="about-content mt-4">
-                
+
                 <!-- POLITICAS DE PRIVACIDAD -->
                 <div class="glass-card scroll-reveal" style="margin-bottom: 3rem; padding: 3rem;">
                     <h2 style="color: var(--color-goku-orange); font-size: 1.8rem; margin-bottom: 1.5rem; font-family: var(--font-heading);">
                         Políticas de Privacidad
                     </h2>
-                    
+
                     <div style="background: rgba(255,255,255,0.02); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; border-left: 3px solid var(--color-goku-orange);">
                         <p style="color: var(--color-text-main); margin-bottom: 0.5rem;"><strong>Sitio Web:</strong> <a href="https://merchan.dev/" style="color: var(--color-goku-orange);">https://merchan.dev/</a></p>
                         <p style="color: var(--color-text-main); margin-bottom: 0.5rem;"><strong>Responsable del Sitio:</strong> Arturo Merchán, operando bajo la marca Merchan.Dev.</p>
@@ -40,7 +40,7 @@ get_header(); ?>
                         Al visitar <a href="https://merchan.dev/" style="color: var(--color-goku-orange);">https://merchan.dev/</a>, recopilamos información de manera transparente y limitada a lo estrictamente necesario para el funcionamiento del sitio y la interacción con los usuarios:
                     </p>
                     <ul style="color: var(--color-text-muted); font-size: 1.05rem; line-height: 1.8; margin-bottom: 1.5rem; padding-left: 1.5rem;">
-                        <li style="margin-bottom: 0.8rem;"><strong>Datos personales proporcionados voluntariamente:</strong> Nombres y direcciones de correo electrónico cuando te suscribes a un boletín, dejas un comentario en los artículos/tutoriales o te comunicas formalmente a través de soporte@merchan.dev.</li>
+                        <li style="margin-bottom: 0.8rem;"><strong>Solicitudes de contacto:</strong> Al enviar el formulario guardamos nombre, correo, servicio, mensaje y fecha de aceptación de privacidad en un registro privado para responder a tu consulta. Se envía un aviso al responsable del sitio. Puedes solicitar acceso, corrección o eliminación escribiendo a soporte@merchan.dev.<br><strong>Otros datos proporcionados voluntariamente:</strong> Nombres y direcciones de correo electrónico cuando te suscribes a un boletín, dejas un comentario en los artículos/tutoriales o te comunicas formalmente a través de soporte@merchan.dev.</li>
                         <li><strong>Datos de navegación (Cookies y Analíticas):</strong> Direcciones IP, tipo de navegador, sistema operativo, páginas visitadas y tiempo de permanencia. Esta información se recopila de forma anonimizada con fines puramente estadísticos y de optimización de la experiencia de usuario.</li>
                     </ul>
 
@@ -120,7 +120,7 @@ get_header(); ?>
                         Para la resolución de cualquier controversia, litigio o discrepancia que pudiera derivarse del acceso o uso de este sitio web, el usuario y el titular se someten expresamente a las leyes de la República Bolivariana de Venezuela y a la jurisdicción de los tribunales competentes de la ciudad de Maturín, Estado Monagas, renunciando a cualquier otro fuero que pudiera corresponderles por razón de sus domicilios presentes o futuros.
                     </p>
                 </div>
-                
+
             </div>
         </div>
     </section>

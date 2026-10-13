@@ -4,9 +4,9 @@
  */
 get_header(); ?>
 
-<main class="service-landing">
+<div class="service-landing">
     <?php while ( have_posts() ) : the_post(); ?>
-        
+
         <!-- Hero Section para el Servicio -->
         <section class="hero-section" style="min-height: 60vh; padding: 160px 0 60px;">
             <div class="aura-effect"></div>
@@ -28,21 +28,21 @@ get_header(); ?>
             <div class="container">
                 <div class="grid-2">
                     <div class="service-content glass-card scroll-reveal" style="padding: 3rem;">
-                        <?php 
+                        <?php
                         // The content is pre-formatted with H2, H3 and paragraphs
-                        the_content(); 
+                        the_content();
                         ?>
                     </div>
-                    
+
                     <div class="service-sidebar scroll-reveal delay-100">
                         <div class="glass-card flex-column" style="position: sticky; top: 120px;">
                             <h3 style="color: var(--color-goku-orange); margin-bottom: 1.5rem;">¿Necesitas este servicio?</h3>
                             <p style="color: var(--color-text-muted); margin-bottom: 2rem;">Hablemos sobre los requerimientos técnicos de tu proyecto y cómo puedo ayudarte a escalarlo.</p>
-                            
+
                             <a href="<?php echo home_url('/contacto/?servicio=' . urlencode(get_the_title())); ?>" class="btn-primary" style="width: 100%; justify-content: center;">
                                 <i class='bx bx-envelope'></i> Solicitar Presupuesto
                             </a>
-                            
+
                             <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--color-border);">
                                 <p style="font-size: 0.9rem; color: var(--color-text-muted); display: flex; align-items: center; gap: 0.5rem;">
                                     <i class='bx bx-check-circle' style="color: var(--color-goku-orange);"></i> Respuesta en 24-48 horas
@@ -58,7 +58,7 @@ get_header(); ?>
         </section>
 
     <?php endwhile; ?>
-</main>
+</div>
 
 <style>
 .service-content h2 { font-size: 2rem; margin-bottom: 2rem; line-height: 1.3; color: var(--color-text-main); }

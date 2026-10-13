@@ -1,6 +1,6 @@
     </main>
 
-    <footer id="contacto" style="background: rgba(10, 10, 10, 0.9); padding: 4rem 0 2rem 0; border-top: 1px solid rgba(255, 122, 0, 0.2); margin-top: 4rem;">
+    <footer id="site-footer" style="background: rgba(10, 10, 10, 0.9); padding: 4rem 0 2rem 0; border-top: 1px solid rgba(255, 122, 0, 0.2); margin-top: 4rem;">
         <div class="container">
             <!-- Top: Logo + Description + Social -->
             <div style="display: flex; flex-direction: column; align-items: center; gap: 2rem;">
@@ -45,26 +45,20 @@
                     <a href="<?php echo esc_url(home_url('/politica-de-cookies/')); ?>" class="footer-legal-link">
                         <i class='bx bx-cookie' style="font-size: 0.9rem;"></i> Política de Cookies
                     </a>
+                    <button type="button" class="text-button" id="cookie-settings">Preferencias</button>
                 </div>
                 <!-- RIGHT: Copyright -->
                 <div class="footer-copyright">
-                    &copy; <?php echo date('Y'); ?> <strong style="color: var(--color-goku-orange);">Merchan.Dev</strong> — Todos los derechos reservados.
+                    &copy; <?php echo esc_html(wp_date('Y')); ?> <strong style="color: var(--color-goku-orange);">Merchan.Dev</strong> — Todos los derechos reservados.
                 </div>
             </div>
         </div>
     </footer>
 </div><!-- .app-container -->
 
-<div id="cookie-banner" class="cookie-banner glass-card" style="display: none;">
-    <div class="cookie-content">
-        <i class='bx bx-cookie' style="font-size: 1.5rem; color: var(--color-goku-orange);"></i>
-        <p>Utilizamos cookies propias y de terceros para mejorar tu experiencia y proteger el sitio. <br class="hide-mobile">Lee nuestra <a href="<?php echo esc_url(home_url('/politica-de-cookies/')); ?>" style="color: var(--color-goku-orange); text-decoration: underline;">Política de Cookies</a>.</p>
-    </div>
-    <div class="cookie-actions">
-        <button id="btn-reject-cookies" class="btn-secondary" style="padding: 8px 16px; font-size: 0.85rem; min-width: 100px;">Rechazar</button>
-        <button id="btn-accept-cookies" class="btn-primary" style="padding: 8px 16px; font-size: 0.85rem; min-width: 100px;">Aceptar</button>
-    </div>
-</div>
+<div id="cookie-banner" class="consent-panel" role="region" aria-label="Preferencias de almacenamiento" hidden>
+<p>Guardamos tu preferencia en este navegador. Puedes aceptar o rechazar el uso opcional y cambiar tu decisión en el pie de página. <a href="<?php echo esc_url(home_url('/politica-de-cookies/')); ?>">Ver política</a>.</p>
+<div class="action-row"><button type="button" id="btn-reject-cookies" class="btn-secondary">Rechazar</button><button type="button" id="btn-accept-cookies" class="btn-primary">Aceptar</button></div></div>
 
 <?php wp_footer(); ?>
 </body>

@@ -1,12 +1,4 @@
-<?php
-/**
- * Main Template File
- */
-get_header(); ?>
-
-<!-- ========================================== -->
-<!-- HERO SECTION                               -->
-<!-- ========================================== -->
+<?php get_header(); ?>
 <section class="hero-section">
     <div class="aura-effect"></div>
 
@@ -19,26 +11,26 @@ get_header(); ?>
                     <span class="typing-cursor" style="display:inline-block; width:5px; height:1em; background-color:var(--color-goku-orange); margin-left:8px; border-radius:2px; animation: cursorBlink 1s step-end infinite;"></span>
                 </h1>
                 <h2 class="hero-subtitle fade-up delay-200">
-                    Programador Full-Stack
+                    Desarrollo de software, web e infraestructura
                 </h2>
-                
+
                 <p class="hero-text fade-up delay-300">
-                    Diseñando arquitecturas escalables, ecosistemas SaaS y experiencias web de alto rendimiento. 10 años transformando complejidad técnica en soluciones de negocio robustas.
+                    Soy Arturo Merchán, desarrollador Full-Stack. Construyo sistemas de reservas, herramientas de gestión, sitios WordPress a medida e integraciones. Conecto la experiencia de usuario, la lógica del negocio y la infraestructura para llevar tu proyecto a producción.
                 </p>
 
 
-                
+
                 <div class="hero-cta fade-up delay-500">
-                    <a href="#casos" class="btn-primary">
+                    <a href="#proyectos" class="btn-primary">
                         <span class="material-symbols-outlined icon-margin">terminal</span>
                         Ver Proyectos
                     </a>
-                    <a href="https://wa.me/584249677293?text=Hola%20Arturo%20%F0%9F%91%8B%20Vi%20tu%20portafolio%20en%20Merchan.Dev%20y%20me%20gustar%C3%ADa%20solicitar%20una%20asesor%C3%ADa%20gratuita.%20%C2%BFTienes%20disponibilidad%3F" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="border-color: #25D366; color: #fff;">
+                    <a href="https://wa.me/584249677293?text=Hola%20Arturo.%20Quiero%20hablar%20sobre%20un%20proyecto." target="_blank" rel="noopener noreferrer" class="btn-secondary" style="border-color: #25D366; color: #fff;">
                         <i class='bx bxl-whatsapp icon-margin' style="font-size: 22px; color: #25D366;"></i>
-                        Asesoría gratuita
+                        Hablemos de tu proyecto
                     </a>
                 </div>
-                
+
                 <div class="scroll-indicator bounce fade-up delay-500">
                     <span class="material-symbols-outlined" style="font-size: 36px; color: var(--color-text-muted);">keyboard_arrow_down</span>
                 </div>
@@ -47,52 +39,22 @@ get_header(); ?>
         </div>
     </div>
 </section>
+<section id="proyectos" class="section-padding bg-darker"><div class="container">
+<div class="section-header text-center scroll-reveal"><span class="section-tag">Trabajo y experiencia</span><h2 class="section-title">Lo que construyo, en proyectos reales</h2><p class="section-subtitle">Reservas, inventarios, comercio electrónico e infraestructura de medios. El contexto y mi participación detrás de cada solución.</p></div>
+<?php $projects = new WP_Query(array('post_type'=>'proyecto','post_status'=>'publish','posts_per_page'=>4,'orderby'=>array('menu_order'=>'ASC','date'=>'DESC')));
+if ($projects->have_posts()) : ?><div class="project-grid"><?php while ($projects->have_posts()) : $projects->the_post(); get_template_part('template-parts/project-card'); endwhile; ?></div><?php wp_reset_postdata(); else : get_template_part('template-parts/experience-cases'); endif; ?>
+<div class="text-center mt-4"><a class="btn-secondary" href="<?php echo esc_url(get_post_type_archive_link('proyecto')); ?>">Explorar proyectos <i class="bx bx-right-arrow-alt" aria-hidden="true"></i></a></div>
+</div></section>
 
-<!-- ========================================== -->
-<!-- SOBRE MI                                   -->
-<!-- ========================================== -->
-<section id="sobre-mi" class="section-padding bg-gradient">
-    <div class="container">
-        <div class="section-header text-left scroll-reveal">
-            <span class="section-tag">Sobre Mí</span>
-            <h2 class="section-title">De la infraestructura al píxel.</h2>
-        </div>
-        
-        <div class="about-content grid-2 mt-4">
-            <div class="glass-card scroll-reveal">
-                <p style="font-size: 1.1rem; color: var(--color-text-main); margin-bottom: 1rem;">Soy un Programador Full-Stack con una década de experiencia en el sector tecnológico. Mi enfoque se centra en construir puentes entre el desarrollo front-end avanzado y las arquitecturas de servidores resilientes.</p>
-                <p style="color: var(--color-text-muted);">No solo escribo código; diseño infraestructuras preparadas para el futuro. Ya sea desarrollando temas a medida con simulaciones en WebGL, integrando flujos de desarrollo potenciados por Inteligencia Artificial, gestionando el ciclo de vida del software con Git y GitHub, o administrando de forma integral servidores VPS, mi objetivo es entregar plataformas rápidas, seguras y altamente escalables.</p>
-            </div>
-            <div class="glass-card scroll-reveal delay-100 flex-center" id="animated-stats-card" style="min-height: 300px; overflow: hidden; position: relative;">
-                <!-- Primary Icon Presentation -->
-                <div id="stat-icon-wrapper" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0; pointer-events: none; z-index: 3; display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;">
-                    <i id="stat-icon" class='bx bx-time-five' style="font-size: 9rem; color: var(--color-goku-orange); text-shadow: 0 15px 50px rgba(249, 115, 22, 0.6);"></i>
-                </div>
-                
-                <!-- Foreground Text Content -->
-                <div style="text-align: center; width: 100%; position: relative; z-index: 2;">
-                    <div id="stat-content-wrapper" style="transform-origin: center;">
-                        <h3 id="stat-number" style="font-size: 7rem; color: var(--color-goku-orange); font-weight: 900; margin-bottom: 0; line-height: 1; text-shadow: 0 15px 50px rgba(249, 115, 22, 0.6); display: inline-block;">0</h3><span id="stat-suffix" style="font-size: 4rem; color: var(--color-goku-orange); font-weight: 900; vertical-align: top;">+</span>
-                        <p id="stat-label" style="color: var(--color-text-main); font-size: 1.5rem; margin-top: 1rem; font-weight: 800; text-transform: uppercase; letter-spacing: 4px;">Iniciando...</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- ========================================== -->
-<!-- SERVICIOS                                  -->
-<!-- ========================================== -->
 <section id="servicios" class="section-padding bg-darker">
     <div class="container">
         <div class="section-header text-center scroll-reveal">
             <span class="section-tag">Lo que ofrezco</span>
-            <h2 class="section-title">Mis Servicios</h2>
+            <h2 class="section-title">Soluciones para cada etapa de tu proyecto</h2><p class="section-subtitle" style="margin:1rem auto;">Producto digital · Desarrollo web avanzado · Infraestructura y operación. Estas son las especialidades que conecto para resolver necesidades concretas.</p>
         </div>
 
         <div class="grid-3 mt-4">
-            <a href="<?php echo esc_url( home_url('/servicios/desarrollo-saas-microservicios/') ); ?>" class="glass-card flex-column scroll-reveal" style="text-decoration: none;">
+            <a href="<?php echo esc_url( am_service_url('desarrollo-saas-microservicios') ); ?>" class="glass-card flex-column scroll-reveal" style="text-decoration: none;">
                 <div class="icon-box mb-3">
                     <i class='bx bx-cloud' style="font-size: 28px;"></i>
                 </div>
@@ -102,17 +64,17 @@ get_header(); ?>
                 </div>
             </a>
 
-            <a href="<?php echo esc_url( home_url('/servicios/streaming-audio-video/') ); ?>" class="glass-card flex-column scroll-reveal delay-100" style="text-decoration: none;">
+            <a href="<?php echo esc_url( am_service_url('streaming-audio-video') ); ?>" class="glass-card flex-column scroll-reveal delay-100" style="text-decoration: none;">
                 <div class="icon-box mb-3">
                     <i class='bx bx-broadcast' style="font-size: 28px;"></i>
                 </div>
                 <div class="card-body">
                     <h3>Configuración de Servidores para Streaming de Audio y Video</h3>
-                    <p>Infraestructura propia para transmisiones en vivo sin interrupciones. Servidores RTMP y arquitecturas simulcast.</p>
+                    <p>Servidores RTMP, distribución de audio y video y arquitecturas simulcast para emisoras, medios y transmisiones en vivo.</p>
                 </div>
             </a>
 
-            <a href="<?php echo esc_url( home_url('/servicios/administracion-vps-devops/') ); ?>" class="glass-card flex-column scroll-reveal delay-200" style="text-decoration: none;">
+            <a href="<?php echo esc_url( am_service_url('administracion-vps-devops') ); ?>" class="glass-card flex-column scroll-reveal delay-200" style="text-decoration: none;">
                 <div class="icon-box mb-3">
                     <i class='bx bx-server' style="font-size: 28px;"></i>
                 </div>
@@ -122,7 +84,7 @@ get_header(); ?>
                 </div>
             </a>
 
-            <a href="<?php echo esc_url( home_url('/servicios/desarrollo-avanzado-wordpress/') ); ?>" class="glass-card flex-column scroll-reveal" style="text-decoration: none;">
+            <a href="<?php echo esc_url( am_service_url('desarrollo-avanzado-wordpress') ); ?>" class="glass-card flex-column scroll-reveal" style="text-decoration: none;">
                 <div class="icon-box mb-3">
                     <i class='bx bxl-wordpress' style="font-size: 28px;"></i>
                 </div>
@@ -132,17 +94,17 @@ get_header(); ?>
                 </div>
             </a>
 
-            <a href="<?php echo esc_url( home_url('/servicios/ecommerce-migraciones/') ); ?>" class="glass-card flex-column scroll-reveal delay-100" style="text-decoration: none;">
+            <a href="<?php echo esc_url( am_service_url('ecommerce-migraciones') ); ?>" class="glass-card flex-column scroll-reveal delay-100" style="text-decoration: none;">
                 <div class="icon-box mb-3">
                     <i class='bx bx-cart-alt' style="font-size: 28px;"></i>
                 </div>
                 <div class="card-body">
                     <h3>E-commerce y Migración de Plataformas</h3>
-                    <p>Migraciones complejas sin pérdida de datos, dashboards a medida e integración segura de pasarelas de pago y TPV virtuales.</p>
+                    <p>Migraciones planificadas, inventario e integración de pasarelas de pago y TPV virtuales para modernizar operaciones comerciales.</p>
                 </div>
             </a>
 
-            <a href="<?php echo esc_url( home_url('/servicios/seo-tecnico/') ); ?>" class="glass-card flex-column scroll-reveal delay-200" style="text-decoration: none;">
+            <a href="<?php echo esc_url( am_service_url('seo-tecnico') ); ?>" class="glass-card flex-column scroll-reveal delay-200" style="text-decoration: none;">
                 <div class="icon-box mb-3">
                     <i class='bx bx-trending-up' style="font-size: 28px;"></i>
                 </div>
@@ -152,7 +114,7 @@ get_header(); ?>
                 </div>
             </a>
 
-            <a href="<?php echo esc_url( home_url('/servicios/consultoria-ia-rendimiento/') ); ?>" class="glass-card flex-column scroll-reveal" style="text-decoration: none;">
+            <a href="<?php echo esc_url( am_service_url('consultoria-ia-rendimiento') ); ?>" class="glass-card flex-column scroll-reveal" style="text-decoration: none;">
                 <div class="icon-box mb-3">
                     <i class='bx bx-brain' style="font-size: 28px;"></i>
                 </div>
@@ -162,7 +124,7 @@ get_header(); ?>
                 </div>
             </a>
 
-            <a href="<?php echo esc_url( home_url('/servicios/infraestructura-fisica-continuidad/') ); ?>" class="glass-card flex-column scroll-reveal delay-100" style="text-decoration: none;">
+            <a href="<?php echo esc_url( am_service_url('infraestructura-fisica-continuidad') ); ?>" class="glass-card flex-column scroll-reveal delay-100" style="text-decoration: none;">
                 <div class="icon-box mb-3">
                     <i class='bx bx-power-off' style="font-size: 28px;"></i>
                 </div>
@@ -174,17 +136,34 @@ get_header(); ?>
         </div>
     </div>
 </section>
+<section id="metodo" class="section-padding bg-gradient"><div class="container"><div class="section-header text-center scroll-reveal"><span class="section-tag">Cómo trabajo</span><h2 class="section-title">Un proceso claro, de principio a fin</h2><p class="section-subtitle">Cada etapa tiene una pregunta que resolver y una entrega que revisar.</p></div><div class="grid-2">
+<?php $steps=array(
+array('01','Diagnóstico y alcance','Entender tu operación, los usuarios y las restricciones. Identificar el problema y acordar prioridades, alcance y criterios de entrega.','bx-search-alt'),
+array('02','Diseño y arquitectura','Definir flujos, datos, integraciones e infraestructura. Revisar la solución propuesta antes de avanzar con su implementación.','bx-network-chart'),
+array('03','Desarrollo y validación','Construir por etapas y revisar avances. Probar los recorridos principales y ajustar con el contexto de uso real.','bx-code-alt'),
+array('04','Despliegue y entrega','Preparar la puesta en producción, documentación y configuración. Acordar el mantenimiento y los siguientes pasos del producto.','bx-rocket'));
+foreach($steps as $step): ?><article class="glass-card scroll-reveal method-card"><div class="icon-box"><i class="bx <?php echo esc_attr($step[3]); ?>" aria-hidden="true"></i></div><span class="step-number"><?php echo esc_html($step[0]); ?></span><h3><?php echo esc_html($step[1]); ?></h3><p><?php echo esc_html($step[2]); ?></p></article><?php endforeach; ?></div></div></section>
 
-<!-- ========================================== -->
-<!-- STACK TECNOLOGICO                          -->
-<!-- ========================================== -->
+<section id="sobre-mi" class="section-padding bg-gradient">
+    <div class="container">
+        <div class="section-header text-left scroll-reveal">
+            <span class="section-tag">Sobre Mí</span>
+            <h2 class="section-title">De la infraestructura al píxel.</h2>
+        </div>
+
+        <div class="about-content grid-2 mt-4">
+            <div class="glass-card scroll-reveal">
+                <p style="font-size: 1.1rem; color: var(--color-text-main); margin-bottom: 1rem;">Soy Arturo Merchán, desarrollador Full-Stack en Maturín, Venezuela. Mi trabajo combina interfaces, lógica de negocio e infraestructura: desde plataformas de reservas hasta WordPress personalizado, integraciones y operación de servidores.</p>
+                <p style="color: var(--color-text-muted);">Trabajo sobre el problema y el contexto de cada cliente. Defino el alcance, construyo por etapas y preparo la entrega con documentación y una base mantenible. Puedes conocer mi trayectoria, responsabilidades y formación en la página sobre mí.</p>
+            </div>
+<div class="glass-card scroll-reveal delay-100 expertise-panel"><span class="material-symbols-outlined expertise-icon" aria-hidden="true">hub</span><h3>Del producto a producción</h3><p>Un mismo enfoque para conectar las piezas de tu proyecto.</p><div class="tags"><span>Interfaces y experiencia</span><span>Backend e integraciones</span><span>Despliegue y operación</span></div><a class="btn-secondary mt-4" href="<?php echo esc_url(home_url('/sobre-mi/')); ?>">Conoce mi trayectoria <i class="bx bx-right-arrow-alt" aria-hidden="true"></i></a></div></div></div></section>
 <section id="stack" class="section-padding">
     <div class="container">
         <div class="section-header text-center scroll-reveal">
             <span class="section-tag">Tecnologías</span>
             <h2 class="section-title">Stack Tecnológico</h2>
         </div>
-        
+
         <div class="grid-2 mt-4">
             <div class="glass-card scroll-reveal">
                 <h3 class="mb-3" style="color: var(--color-goku-orange);">
@@ -221,130 +200,8 @@ get_header(); ?>
         </div>
     </div>
 </section>
+<section id="codigo" class="section-padding"><div class="container"><div class="glass-card code-banner scroll-reveal"><div><span class="section-tag">Código abierto</span><h2 class="section-title">Las decisiones también están en el código.</h2><p>Explora mis repositorios, experimentos y herramientas. GitHub complementa los proyectos con una mirada a su implementación técnica.</p></div><a class="btn-primary" href="https://github.com/merchandev" target="_blank" rel="noopener noreferrer"><i class="bx bxl-github" aria-hidden="true"></i> Explorar GitHub</a></div></div></section>
 
-<!-- ========================================== -->
-<!-- CASOS DE ESTUDIO                           -->
-<!-- ========================================== -->
-<section id="casos" class="section-padding bg-darker">
-    <div class="container">
-        <div class="section-header text-center scroll-reveal">
-            <span class="section-tag">Portafolio</span>
-            <h2 class="section-title">Casos de Estudio Destacados</h2>
-        </div>
-
-        <div class="grid-3 mt-4 mb-5">
-            <div class="glass-card flex-column scroll-reveal">
-                <div class="project-icon">
-                    <span class="material-symbols-outlined" style="font-size: 32px;">podcasts</span>
-                </div>
-                <h3>Ecosistema de Medios y Streaming Digital</h3>
-                <p class="project-desc"><strong>Cliente:</strong> Grupo La Verdad de Monagas (Monagas Visión, Sonora 99.3FM)</p>
-                <p class="project-desc">Modernizar la infraestructura de transmisión digital e implementación de VPS para servidores RTMP.</p>
-                <div class="tags mt-auto">
-                    <span>Streaming</span>
-                    <span>VPS</span>
-                    <span>RTMP</span>
-                </div>
-            </div>
-
-            <div class="glass-card flex-column scroll-reveal delay-100">
-                <div class="project-icon blue">
-                    <span class="material-symbols-outlined" style="font-size: 32px;">query_stats</span>
-                </div>
-                <h3>Dominio SEO en el Sector Automotriz</h3>
-                <p class="project-desc"><strong>Cliente:</strong> Concesionario Toyota (Maturín)</p>
-                <p class="project-desc">Ejecución de una estrategia de SEO técnico y de contenido hiperlocal, logrando la primera posición en Google.</p>
-                <div class="tags mt-auto">
-                    <span>SEO</span>
-                    <span>Marketing</span>
-                </div>
-            </div>
-
-            <div class="glass-card flex-column scroll-reveal delay-200">
-                <div class="project-icon">
-                    <span class="material-symbols-outlined" style="font-size: 32px;">storefront</span>
-                </div>
-                <h3>Migración y Escalabilidad E-commerce</h3>
-                <p class="project-desc"><strong>Cliente:</strong> Mínima Organics / Me Transfers</p>
-                <p class="project-desc">Migraciones complejas integrando pasarelas de pago y sistemas de TPV virtual, garantizando transacciones seguras.</p>
-                <div class="tags mt-auto">
-                    <span>E-commerce</span>
-                    <span>Pagos</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Open Source / GitHub section -->
-        <div class="section-header text-center scroll-reveal mt-6">
-            <h2 class="section-title">Código Abierto (GitHub)</h2>
-            <p class="section-subtitle" style="margin: 1rem auto;">Explora mis contribuciones, experimentos y arquitectura de código en mi perfil oficial.</p>
-        </div>
-
-        <div id="github-repos-grid" class="grid-2">
-            <div class="loader-container">Cargando repositorios...</div>
-        </div>
-    </div>
-</section>
-
-<!-- ========================================== -->
-<!-- CONTACTO                                   -->
-<!-- ========================================== -->
-<section id="contacto" class="section-padding bg-gradient">
-    <div class="container">
-        <div class="grid-2">
-            <div class="contact-info scroll-reveal">
-                <span class="section-tag">Contacto</span>
-                <h2 class="section-title mb-4">¿Listo para escalar tu infraestructura o construir tu próximo SaaS?</h2>
-                <p style="color: var(--color-text-muted); font-size: 1.1rem; margin-bottom: 2rem;">Ya sea que necesites una administración experta de tu VPS, una migración compleja o el desarrollo de una plataforma desde cero, hablemos de cómo la tecnología adecuada puede acelerar tu negocio.</p>
-                <div class="contact-details">
-                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                        <span class="material-symbols-outlined" style="color: var(--color-goku-orange);">phone_in_talk</span>
-                        <span>Disponible para consultoría</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                        <span class="material-symbols-outlined" style="color: var(--color-goku-orange);">school</span>
-                        <span>Clases de programación</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
-                        <span class="material-symbols-outlined" style="color: var(--color-goku-orange);">find_in_page</span>
-                        <span>Auditorías técnicas de sitios web</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="glass-card scroll-reveal delay-100">
-                <form id="nuclearContactForm" class="contact-form flex-column" style="gap: 1.5rem;">
-                    <div>
-                        <label for="nombre" style="display: block; margin-bottom: 0.5rem; color: var(--color-text-muted);">Nombre Completo *</label>
-                        <input type="text" id="nombre" name="nombre" required placeholder="Tu nombre" class="form-input">
-                    </div>
-                    <div>
-                        <label for="email" style="display: block; margin-bottom: 0.5rem; color: var(--color-text-muted);">Email de Contacto *</label>
-                        <input type="email" id="email" name="email" required placeholder="tu@email.com" class="form-input">
-                    </div>
-                    <div>
-                        <label for="servicio" style="display: block; margin-bottom: 0.5rem; color: var(--color-text-muted);">Servicio de Interés</label>
-                        <select id="servicio" name="servicio" class="form-input">
-                            <option value="SaaS / Web App">SaaS / Web App</option>
-                            <option value="Servidores / VPS">Administración de Servidores / VPS</option>
-                            <option value="E-commerce">Migración E-commerce</option>
-                            <option value="SEO Técnico">SEO Técnico</option>
-                            <option value="WordPress Avanzado">WordPress Avanzado</option>
-                            <option value="Otro">Otro / Consultoría</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="mensaje" style="display: block; margin-bottom: 0.5rem; color: var(--color-text-muted);">Mensaje *</label>
-                        <textarea id="mensaje" name="mensaje" rows="4" required placeholder="Cuéntame sobre tu proyecto..." class="form-input"></textarea>
-                    </div>
-                    <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;">
-                        Enviar Mensaje
-                    </button>
-                    <div id="form-response" style="margin-top: 1rem; text-align: center;"></div>
-                </form>
-            </div>
-        </div>
-    </div>
-</section>
+<section id="contacto" class="section-padding bg-gradient"><div class="container"><div class="grid-2"><div class="contact-info scroll-reveal"><span class="section-tag">Hablemos de tu proyecto</span><h2 class="section-title mb-4">¿Qué necesitas construir o mejorar?</h2><p class="contact-copy">Cuéntame el problema, el estado actual y los plazos que tienes en mente. Revisemos qué solución necesitas y cómo llevarla a producción.</p><div class="contact-details"><p><i class="bx bx-code-alt" aria-hidden="true"></i> Productos digitales y desarrollo a medida</p><p><i class="bx bx-server" aria-hidden="true"></i> Infraestructura, integraciones y operación</p><p><i class="bx bx-search-alt" aria-hidden="true"></i> Consultoría y auditorías técnicas</p></div><div class="contact-alternatives"><a href="mailto:soporte@merchan.dev"><i class="bx bx-envelope" aria-hidden="true"></i> soporte@merchan.dev</a><a href="https://wa.me/584249677293" target="_blank" rel="noopener noreferrer"><i class="bx bxl-whatsapp" aria-hidden="true"></i> Escríbeme por WhatsApp</a></div></div><div class="glass-card scroll-reveal"><?php get_template_part('template-parts/contact-form'); ?></div></div></div></section>
 
 <?php get_footer(); ?>
