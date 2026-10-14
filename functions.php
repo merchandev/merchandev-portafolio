@@ -94,7 +94,7 @@ function am_register_servicios_cpt() {
     $args = array(
         'label'                 => 'Servicio',
         'labels'                => $labels,
-        'supports'              => array( 'title', 'editor', 'thumbnail', 'excerpt', 'custom-fields' ),
+        'supports'              => array( 'title', 'editor', 'thumbnail', 'excerpt', 'custom-fields', 'revisions' ),
         'public'                => true,
         'show_ui'               => true,
         'show_in_menu'          => true,
@@ -118,8 +118,8 @@ add_action( 'init', 'am_register_servicios_cpt', 0 );
 // 4.1 AJAX Search
 // -----------------------------------------------------------------------------
 function am_ajax_search() {
-    check_ajax_referer('am_nonce', 'security');
-
+    // Búsqueda pública de solo lectura: sin nonce, porque las páginas cacheadas (LiteSpeed/CDN)
+    // sirven nonces caducados y la búsqueda dejaba de funcionar. Solo devuelve contenido publicado.
     $query = sanitize_text_field(wp_unslash(isset($_POST['query']) && is_string($_POST['query']) ? $_POST['query'] : ''));
     if(strlen($query) < 2) {
         wp_send_json_success(array());
@@ -141,6 +141,7 @@ function am_ajax_search() {
 
             $icon = 'bx-file';
             if (get_post_type() == 'servicio') $icon = 'bx-cube-alt';
+            if (get_post_type() == 'proyecto') $icon = 'bx-code-block';
             if (get_post_type() == 'post') $icon = 'bx-news';
 
             $results[] = array(
@@ -166,7 +167,28 @@ function am_auto_create_services() {
         return;
     }
 
-    $services = array(
+    foreach ( am_legacy_services() as $svc ) {
+        $existing = get_page_by_path( $svc['post_name'], OBJECT, 'servicio' );
+        if ( ! $existing ) {
+            wp_insert_post( array(
+                'post_title'    => $svc['post_title'],
+                'post_name'     => $svc['post_name'],
+                'post_content'  => $svc['post_content'],
+                'post_status'   => 'publish',
+                'post_type'     => 'servicio',
+            ) );
+        }
+    }
+
+    update_option( 'am_services_created', true );
+}
+
+/**
+ * Textos originales con los que el tema creó los servicios. Se conservan para que el
+ * importador 2026 detecte si un servicio sigue sin editar antes de actualizar su texto.
+ */
+function am_legacy_services() {
+    return array(
         array(
             'post_title' => 'Desarrollo SaaS y Arquitectura de Microservicios',
             'post_name'  => 'desarrollo-saas-microservicios',
@@ -208,21 +230,6 @@ function am_auto_create_services() {
             'post_content' => '<!-- wp:heading {"level":2} --><h2>Resiliencia de hardware para que tu operación técnica nunca se detenga.</h2><!-- /wp:heading --><!-- wp:heading {"level":3} --><h3>Qué ofreces aquí</h3><!-- /wp:heading --><!-- wp:paragraph --><p>Asesoría en ensamblaje de configuraciones multi-PC, recuperación ante fallos (configuraciones de pérdida de CA en BIOS/UEFI) y cálculo/despliegue de sistemas de respaldo energético portátiles o a gasolina.</p><!-- /wp:paragraph --><!-- wp:heading {"level":3} --><h3>Cliente ideal</h3><!-- /wp:heading --><!-- wp:paragraph --><p>Profesionales independientes, streamers o pequeñas oficinas que no pueden permitirse tiempos de inactividad por fallos eléctricos o de hardware.</p><!-- /wp:paragraph -->'
         )
     );
-
-    foreach ( $services as $svc ) {
-        $existing = get_page_by_path( $svc['post_name'], OBJECT, 'servicio' );
-        if ( ! $existing ) {
-            wp_insert_post( array(
-                'post_title'    => $svc['post_title'],
-                'post_name'     => $svc['post_name'],
-                'post_content'  => $svc['post_content'],
-                'post_status'   => 'publish',
-                'post_type'     => 'servicio',
-            ) );
-        }
-    }
-
-    update_option( 'am_services_created', true );
 }
 
 
@@ -327,7 +334,11 @@ add_action( 'init', 'am_register_leads_cpt', 0 );
 // 9. AJAX Form Submission for Leads
 // -----------------------------------------------------------------------------
 require_once get_template_directory() . '/inc/contact.php';
-require_once get_template_directory() . '/inc/portfolio.php';
+require_once get_template_directory() . '/inc/projects.php';
+require_once get_template_directory() . '/inc/specialties.php';
+require_once get_template_directory() . '/inc/capabilities.php';
+require_once get_template_directory() . '/inc/seed.php';
+require_once get_template_directory() . '/inc/seo.php';
 
 
 
@@ -400,7 +411,7 @@ add_action( 'pre_get_posts', 'am_filter_blog_by_year' );
 // 15. AJAX Endpoint para filtrar el blog por año sin recargar
 // -----------------------------------------------------------------------------
 function am_ajax_filter_blog() {
-    check_ajax_referer('am_nonce', 'security');
+    // Filtro público de solo lectura (ver am_ajax_search): no requiere nonce.
     $year = isset($_POST['year']) ? absint($_POST['year']) : 0;
     $paged = isset($_POST['paged']) ? max(1, absint($_POST['paged'])) : 1;
 
