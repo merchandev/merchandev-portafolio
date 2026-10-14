@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.sidebar-nav .nav-item').forEach(link => {
         const target = new URL(link.href, location.href);
         const path = location.pathname;
-        const active = target.origin === location.origin && (target.pathname === path || (target.pathname !== '/' && path.startsWith(target.pathname)) || (target.pathname.endsWith('/servicios/') && path.includes('/servicio/')));
+        const active = target.origin === location.origin && (target.pathname === path || (target.pathname !== '/' && path.startsWith(target.pathname)) || (target.pathname.endsWith('/servicios/') && path.includes('/servicio/')) || (target.pathname.endsWith('/proyectos/') && path.includes('/tipo-de-proyecto/')));
         if (active) { link.classList.add('active-nav'); link.setAttribute('aria-current','page'); }
     });
     const typing = document.getElementById('typing-text');
@@ -72,13 +72,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const status = document.getElementById('form-response');
     if (form && status && typeof amData !== 'undefined') {
         let started = false, sending = false;
+        // Las páginas cacheadas (LiteSpeed/CDN) pueden traer un nonce caducado: se pide uno nuevo antes de enviar.
+        const refreshNonce = async signal => {
+            const body = new FormData(); body.set('action', 'am_contact_token');
+            const response = await fetch(amData.ajax_url, { method:'POST', body, credentials:'same-origin', signal });
+            const data = response.ok ? await response.json() : null;
+            if (data && data.success && typeof data.data === 'string' && form.elements.security) form.elements.security.value = data.data;
+        };
         form.addEventListener('input', () => { if (!started) { started = true; emit('contact_start'); } });
-        const service = new URLSearchParams(location.search).get('servicio');
-        if (service) {
-            const maps = [['saas','Producto digital'],['microserv','Producto digital'],['wordpress','Desarrollo web'],['ecommerce','E-commerce'],['migraci','E-commerce'],['seo','SEO Técnico'],['vps','Infraestructura'],['devops','Infraestructura'],['streaming','Infraestructura']];
-            const match = maps.find(([key]) => service.toLowerCase().includes(key));
-            form.elements.service.value = match ? match[1] : 'Consultoría';
-        }
         form.addEventListener('submit', async event => {
             event.preventDefault();
             if (sending || !form.reportValidity()) return;
@@ -89,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
             form.setAttribute('aria-busy','true');
             const controller = new AbortController(), timeout = setTimeout(() => controller.abort(), 20000);
             try {
+                await refreshNonce(controller.signal).catch(error => { if (error.name === 'AbortError') throw error; });
                 const response = await fetch(amData.ajax_url, { method:'POST', body:new FormData(form), credentials:'same-origin', signal:controller.signal });
                 if (!response.ok) throw new Error('network');
                 const result = await response.json();
