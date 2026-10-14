@@ -48,8 +48,11 @@ $check( $result['estado'] === 'referencia' && $site['shots'] === 0, 'primera rev
 $result = am_refresh_project_capture( $post_id );
 $check( $result['estado'] === 'sin_cambios' && $site['shots'] === 0, 'sin cambios de interfaz (aunque cambie el contenido): no captura' );
 
+$purges = 0;
+add_action( 'litespeed_purge_all', function () use ( &$purges ) { $purges++; } );
 $site['css'] = 'body{color:#222}';
 $result = am_refresh_project_capture( $post_id );
+$check( $purges > 0, 'al cambiar la captura se vacía la caché de páginas (LiteSpeed)' );
 $thumb = (int) get_post_thumbnail_id( $post_id );
 $gallery = array_map( 'intval', explode( ',', get_post_meta( $post_id, '_am_gallery', true ) ) );
 $check( $result['estado'] === 'actualizada' && $site['shots'] === 1, 'cambio de estilos: toma una captura nueva' );

@@ -56,6 +56,7 @@ Tarea diaria de WP-Cron (`am_daily_project_captures`) para los proyectos con URL
 2. Sin cambios: conserva la captura. Con cambios (o si el proyecto aún no tiene imagen): toma capturas nuevas de escritorio (1280×800) y móvil (390×844 a 2×) con Microlink y sustituyen a las anteriores en la portada y la galería; las anteriores quedan en la biblioteca.
 3. No captura páginas de mantenimiento ni verificaciones antibots (comprobado en el HTML y en la página renderizada). Si la web bloquea a los servidores, lee sus recursos con el navegador remoto de Microlink.
 4. Cada proyecto se procesa en una tarea separada (y la móvil en otra) para no superar el tiempo máximo de PHP en hosting compartido.
+5. Tras sustituir una captura (y tras una importación o migración con cambios) el tema vacía la caché de LiteSpeed (`litespeed_purge_all`) para que la portada no muestre la versión anterior. La caché del CDN de Hostinger, si no la purga LiteSpeed, se vacía desde hPanel.
 
 En el listado de proyectos hay una acción **Actualizar captura ahora** y una columna con el último resultado.
 

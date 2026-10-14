@@ -35,6 +35,7 @@ Rama `feature/portafolio-2026-reestructuracion`. Versión de contenido `2026.10.
 | Accesibilidad de navegación | Faltaban textos para lectores, iconos marcados como decorativos y foco en el pie | Iconos `aria-hidden`, avisos «se abre en una pestaña nueva», menú expandible con teclado, foco visible, pie sin JavaScript en línea. |
 | Legibilidad y móvil | Barra móvil sin Inicio destacado y orden roto al añadir Proyectos | Orden por clases: Proyectos · Servicios · Inicio · Sobre mí · Contacto; contraste revisado con axe. |
 | Nonces en páginas cacheadas (detectado) | LiteSpeed/CDN servía nonces caducados: búsqueda y formulario podían fallar | Búsqueda pública sin nonce; el formulario pide uno nuevo antes de enviar. |
+| Caché tras cambios automáticos (detectado tras el despliegue) | La portada cacheada seguía mostrando el proyecto antiguo después de la migración | El tema vacía la caché de LiteSpeed tras importaciones con cambios y tras cada captura nueva. |
 | Importador (detectado en QA) | Duplicaba borradores desde WP-CLI y recreaba proyectos en la papelera | Búsqueda por `post_name__in` en todos los estados. |
 
 ## Rendimiento
@@ -60,4 +61,4 @@ Rama `feature/portafolio-2026-reestructuracion`. Versión de contenido `2026.10.
 2. Sustituir los archivos de la carpeta del tema activo (en producción, `wp-content/themes/mv/`) por los de esta rama, sin `tests/` si se prefiere. No hace falta reactivar el tema.
 3. Entrar al escritorio como administrador: la migración se aplica sola y muestra un informe.
 4. Configurar el cron real del servidor (ver `PORTAFOLIO_ARQUITECTURA_2026.md`) y, opcionalmente, `AM_MICROLINK_API_KEY`.
-5. Revisar **Proyectos**, purgar la caché de LiteSpeed y comprobar el formulario con un envío real.
+5. Revisar **Proyectos**, purgar la caché de LiteSpeed y la del CDN de Hostinger, y comprobar el formulario con un envío real.

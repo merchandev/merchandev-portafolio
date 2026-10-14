@@ -675,8 +675,19 @@ function am_run_portfolio_import() {
 
     am_seed_remove_unused_legacy_images( $report );
     flush_rewrite_rules( false );
+    if ( $report['creados'] || $report['migrados'] || $report['textos_actualizados'] || $report['servicios_actualizados'] || $report['retirados'] ) { am_purge_page_cache(); }
     if ( ! $report['errores'] ) { update_option( 'am_portfolio_seed_version', AM_SEED_VERSION ); }
     return $report;
+}
+
+/**
+ * Vacía la caché de páginas (LiteSpeed Cache) cuando el tema cambia contenido por su cuenta:
+ * si no, la portada cacheada puede mostrar proyectos o capturas antiguos durante días.
+ * La caché del CDN de Hostinger se vacía desde hPanel si no la purga LiteSpeed.
+ */
+function am_purge_page_cache() {
+    do_action( 'litespeed_purge_all' );
+    if ( function_exists( 'wp_cache_flush' ) ) { wp_cache_flush(); }
 }
 
 /** Preparación completa: tipos de contenido, páginas base y contenido inicial. */

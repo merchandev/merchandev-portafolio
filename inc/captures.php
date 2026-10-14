@@ -256,6 +256,7 @@ function am_capture_store( $post_id, $bytes, $kind ) {
     if ( $position !== false ) { $gallery[ $position ] = $attachment; } elseif ( $kind === 'desktop' ) { array_unshift( $gallery, $attachment ); } else { $gallery[] = $attachment; }
     update_post_meta( $post_id, '_am_gallery', implode( ',', array_unique( $gallery ) ) );
     if ( $kind === 'desktop' ) { set_post_thumbnail( $post_id, $attachment ); }
+    am_purge_page_cache(); // La portada y el catálogo muestran la captura nueva sin esperar a que caduque la caché.
     return $attachment;
 }
 
