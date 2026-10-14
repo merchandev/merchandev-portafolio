@@ -1,55 +1,45 @@
     </main>
 
-    <footer id="site-footer" style="background: rgba(10, 10, 10, 0.9); padding: 4rem 0 2rem 0; border-top: 1px solid rgba(255, 122, 0, 0.2); margin-top: 4rem;">
+    <footer id="site-footer" class="site-footer">
         <div class="container">
-            <!-- Top: Logo + Description + Social -->
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 2rem;">
-                <img src="<?php echo get_template_directory_uri(); ?>/assets/image/LOGO2026 - MERCHAN.DEV.png" alt="Merchan.Dev Logo" style="height: 60px; width: auto; object-fit: contain;">
-                <p style="color: var(--color-text-muted); text-align: center; max-width: 600px;">
-                    Desarrollo de Arquitectura Personalizada. <br/>
-                    Ingeniería de Software · WordPress Solutions Architect · DevOps
+            <div class="footer-top">
+                <img src="<?php echo esc_url( get_template_directory_uri() . '/assets/image/LOGO2026 - MERCHAN.DEV.png' ); ?>" alt="Merchan.Dev" class="footer-logo" height="60" loading="lazy">
+                <p class="footer-tagline">
+                    Arturo Merchán · Desarrollador de software Full-Stack<br>
+                    Plataformas digitales · Sistemas empresariales · Infraestructura y operación
                 </p>
-                
-                <div class="footer-social" style="display: flex; gap: 1.5rem; flex-wrap: wrap; justify-content: center;">
-                    <!-- Github -->
-                    <a href="https://github.com/merchandev" target="_blank" rel="noopener noreferrer" aria-label="GitHub" style="color: var(--color-text-main); background: rgba(255, 255, 255, 0.05); padding: 0.8rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" onmouseover="this.style.backgroundColor='rgba(255, 122, 0, 0.2)'; this.style.color='var(--color-goku-orange)';" onmouseout="this.style.backgroundColor='rgba(255, 255, 255, 0.05)'; this.style.color='var(--color-text-main)';">
-                        <i class='bx bxl-github' style='font-size: 24px;'></i>
-                    </a>
-                    <!-- LinkedIn -->
-                    <a href="https://www.linkedin.com/in/merchandev/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" style="color: var(--color-text-main); background: rgba(255, 255, 255, 0.05); padding: 0.8rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" onmouseover="this.style.backgroundColor='rgba(255, 122, 0, 0.2)'; this.style.color='var(--color-goku-orange)';" onmouseout="this.style.backgroundColor='rgba(255, 255, 255, 0.05)'; this.style.color='var(--color-text-main)';">
-                        <i class='bx bxl-linkedin' style='font-size: 24px;'></i>
-                    </a>
-                    <!-- TikTok -->
-                    <a href="https://www.tiktok.com/@merchan.dev" target="_blank" rel="noopener noreferrer" aria-label="TikTok" style="color: var(--color-text-main); background: rgba(255, 255, 255, 0.05); padding: 0.8rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" onmouseover="this.style.backgroundColor='rgba(255, 122, 0, 0.2)'; this.style.color='var(--color-goku-orange)';" onmouseout="this.style.backgroundColor='rgba(255, 255, 255, 0.05)'; this.style.color='var(--color-text-main)';">
-                        <i class='bx bxl-tiktok' style='font-size: 24px;'></i>
-                    </a>
-                    <!-- YouTube -->
-                    <a href="https://www.youtube.com/@merchandeveloper" target="_blank" rel="noopener noreferrer" aria-label="YouTube" style="color: var(--color-text-main); background: rgba(255, 255, 255, 0.05); padding: 0.8rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" onmouseover="this.style.backgroundColor='rgba(255, 122, 0, 0.2)'; this.style.color='var(--color-goku-orange)';" onmouseout="this.style.backgroundColor='rgba(255, 255, 255, 0.05)'; this.style.color='var(--color-text-main)';">
-                        <i class='bx bxl-youtube' style='font-size: 24px;'></i>
-                    </a>
-                    <!-- Instagram -->
-                    <a href="https://www.instagram.com/merchan.dev/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" style="color: var(--color-text-main); background: rgba(255, 255, 255, 0.05); padding: 0.8rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: all 0.2s;" onmouseover="this.style.backgroundColor='rgba(255, 122, 0, 0.2)'; this.style.color='var(--color-goku-orange)';" onmouseout="this.style.backgroundColor='rgba(255, 255, 255, 0.05)'; this.style.color='var(--color-text-main)';">
-                        <i class='bx bxl-instagram' style='font-size: 24px;'></i>
-                    </a>
+
+                <nav class="footer-nav" aria-label="Enlaces del sitio">
+                    <a href="<?php echo esc_url( home_url( '/proyectos/' ) ); ?>">Proyectos</a>
+                    <a href="<?php echo esc_url( home_url( '/servicios/' ) ); ?>">Servicios</a>
+                    <a href="<?php echo esc_url( home_url( '/sobre-mi/' ) ); ?>">Sobre mí</a>
+                    <a href="<?php echo esc_url( home_url( '/blog/' ) ); ?>">Blog</a>
+                    <a href="<?php echo esc_url( home_url( '/contacto/' ) ); ?>">Contacto</a>
+                    <a href="<?php echo esc_url( get_template_directory_uri() . '/assets/docs/CV_Arturo_Merchan.pdf' ); ?>" download>CV (PDF)</a>
+                </nav>
+
+                <div class="footer-social">
+                    <a href="https://github.com/merchandev" target="_blank" rel="noopener noreferrer" aria-label="GitHub (se abre en una pestaña nueva)"><i class="bx bxl-github" aria-hidden="true"></i></a>
+                    <a href="https://www.linkedin.com/in/merchandev/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn (se abre en una pestaña nueva)"><i class="bx bxl-linkedin" aria-hidden="true"></i></a>
+                    <a href="https://www.tiktok.com/@merchan.dev" target="_blank" rel="noopener noreferrer" aria-label="TikTok (se abre en una pestaña nueva)"><i class="bx bxl-tiktok" aria-hidden="true"></i></a>
+                    <a href="https://www.youtube.com/@merchandeveloper" target="_blank" rel="noopener noreferrer" aria-label="YouTube (se abre en una pestaña nueva)"><i class="bx bxl-youtube" aria-hidden="true"></i></a>
+                    <a href="https://www.instagram.com/merchan.dev/" target="_blank" rel="noopener noreferrer" aria-label="Instagram (se abre en una pestaña nueva)"><i class="bx bxl-instagram" aria-hidden="true"></i></a>
                 </div>
             </div>
-            
-            <!-- Bottom bar: Legal links LEFT | Copyright RIGHT -->
+
             <div class="footer-bottom">
-                <!-- LEFT: Legal links -->
                 <div class="footer-legal-links">
-                    <a href="<?php echo esc_url(home_url('/politicas-de-privacidad-y-terminos/')); ?>" class="footer-legal-link">
-                        <i class='bx bx-shield-quarter' style="font-size: 0.9rem;"></i> Aviso Legal y Términos
+                    <a href="<?php echo esc_url( home_url( '/politicas-de-privacidad-y-terminos/' ) ); ?>" class="footer-legal-link">
+                        <i class="bx bx-shield-quarter" aria-hidden="true"></i> Aviso Legal y Términos
                     </a>
-                    <span class="footer-separator">·</span>
-                    <a href="<?php echo esc_url(home_url('/politica-de-cookies/')); ?>" class="footer-legal-link">
-                        <i class='bx bx-cookie' style="font-size: 0.9rem;"></i> Política de Cookies
+                    <span class="footer-separator" aria-hidden="true">·</span>
+                    <a href="<?php echo esc_url( home_url( '/politica-de-cookies/' ) ); ?>" class="footer-legal-link">
+                        <i class="bx bx-cookie" aria-hidden="true"></i> Política de Cookies
                     </a>
                     <button type="button" class="text-button" id="cookie-settings">Preferencias</button>
                 </div>
-                <!-- RIGHT: Copyright -->
                 <div class="footer-copyright">
-                    &copy; <?php echo esc_html(wp_date('Y')); ?> <strong style="color: var(--color-goku-orange);">Merchan.Dev</strong> — Todos los derechos reservados.
+                    &copy; <?php echo esc_html( wp_date( 'Y' ) ); ?> <strong>Merchan.Dev</strong> — Todos los derechos reservados.
                 </div>
             </div>
         </div>
@@ -57,7 +47,7 @@
 </div><!-- .app-container -->
 
 <div id="cookie-banner" class="consent-panel" role="region" aria-label="Preferencias de almacenamiento" hidden>
-<p>Guardamos tu preferencia en este navegador. Puedes aceptar o rechazar el uso opcional y cambiar tu decisión en el pie de página. <a href="<?php echo esc_url(home_url('/politica-de-cookies/')); ?>">Ver política</a>.</p>
+<p>Guardamos tu preferencia en este navegador. Puedes aceptar o rechazar el uso opcional y cambiar tu decisión en el pie de página. <a href="<?php echo esc_url( home_url( '/politica-de-cookies/' ) ); ?>">Ver política</a>.</p>
 <div class="action-row"><button type="button" id="btn-reject-cookies" class="btn-secondary">Rechazar</button><button type="button" id="btn-accept-cookies" class="btn-primary">Aceptar</button></div></div>
 
 <?php wp_footer(); ?>

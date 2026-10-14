@@ -1,207 +1,156 @@
-<?php get_header(); ?>
-<section class="hero-section">
+<?php
+get_header();
+$featured = am_projects_for_display( true, 6 );
+$others = am_projects_for_display( false, 6 );
+$cv_url = get_template_directory_uri() . '/assets/docs/CV_Arturo_Merchan.pdf';
+?>
+<section class="hero-section" aria-labelledby="hero-title">
     <div class="aura-effect"></div>
-
     <div class="container" style="position: relative; z-index: 2;">
         <div class="hero-flex">
-            <!-- Left Column: Text & CTA -->
             <div class="hero-content">
-                <h1 class="hero-title fade-up delay-100" style="min-height: 1.2em; display: flex; align-items: center; flex-wrap: wrap;">
-                    <span id="typing-text" class="text-gradient">Arturo Merchán</span>
-                    <span class="typing-cursor" style="display:inline-block; width:5px; height:1em; background-color:var(--color-goku-orange); margin-left:8px; border-radius:2px; animation: cursorBlink 1s step-end infinite;"></span>
+                <p class="hero-signature fade-up">De la infraestructura al píxel</p>
+                <h1 id="hero-title" class="hero-title fade-up delay-100">
+                    <span id="typing-text" class="text-gradient">Arturo Merchán</span><span class="typing-cursor" aria-hidden="true"></span>
                 </h1>
-                <h2 class="hero-subtitle fade-up delay-200">
-                    Desarrollo de software, web e infraestructura
-                </h2>
-
-                <p class="hero-text fade-up delay-300">
-                    Soy Arturo Merchán, desarrollador Full-Stack. Construyo sistemas de reservas, herramientas de gestión, sitios WordPress a medida e integraciones. Conecto la experiencia de usuario, la lógica del negocio y la infraestructura para llevar tu proyecto a producción.
-                </p>
-
-
-
-                <div class="hero-cta fade-up delay-500">
-                    <a href="#proyectos" class="btn-primary">
-                        <span class="material-symbols-outlined icon-margin">terminal</span>
-                        Ver Proyectos
-                    </a>
-                    <a href="https://wa.me/584249677293?text=Hola%20Arturo.%20Quiero%20hablar%20sobre%20un%20proyecto." target="_blank" rel="noopener noreferrer" class="btn-secondary" style="border-color: #25D366; color: #fff;">
-                        <i class='bx bxl-whatsapp icon-margin' style="font-size: 22px; color: #25D366;"></i>
-                        Hablemos de tu proyecto
+                <p class="hero-subtitle fade-up delay-200">Desarrollador de software Full-Stack<span class="hero-subtitle-detail"> · Plataformas digitales, sistemas empresariales y soluciones a medida</span></p>
+                <p class="hero-text fade-up delay-300">Diseño, desarrollo y pongo en marcha productos digitales completos: la interfaz, la lógica de negocio, las APIs y bases de datos, las integraciones y el servidor donde todo funciona. He construido sistemas de reservas y pagos, plataformas documentales, un directorio médico con app móvil y portales privados para empresas.</p>
+                <div class="hero-cta fade-up delay-400">
+                    <a href="#proyectos" class="btn-primary"><i class="bx bx-code-block icon-margin" aria-hidden="true"></i> Ver proyectos</a>
+                    <a href="https://wa.me/584249677293?text=Hola%20Arturo.%20Quiero%20hablar%20sobre%20un%20proyecto." target="_blank" rel="noopener noreferrer" class="btn-secondary btn-whatsapp">
+                        <i class="bx bxl-whatsapp icon-margin" aria-hidden="true"></i> Hablemos de tu proyecto<span class="screen-reader-text"> (WhatsApp, se abre en una pestaña nueva)</span>
                     </a>
                 </div>
-
-                <div class="scroll-indicator bounce fade-up delay-500">
-                    <span class="material-symbols-outlined" style="font-size: 36px; color: var(--color-text-muted);">keyboard_arrow_down</span>
-                </div>
+                <ul class="hero-domains fade-up delay-500" aria-label="Sectores con proyectos">
+                    <li>Movilidad y turismo</li><li>Salud</li><li>Publicaciones legales</li><li>Medios</li><li>Comercio</li>
+                </ul>
+                <a class="scroll-indicator bounce fade-up delay-500" href="#proyectos" aria-label="Ir a proyectos destacados">
+                    <span class="material-symbols-outlined" aria-hidden="true">keyboard_arrow_down</span>
+                </a>
             </div>
-
         </div>
     </div>
 </section>
-<section id="proyectos" class="section-padding bg-darker"><div class="container">
-<div class="section-header text-center scroll-reveal"><span class="section-tag">Trabajo y experiencia</span><h2 class="section-title">Lo que construyo, en proyectos reales</h2><p class="section-subtitle">Reservas, inventarios, comercio electrónico e infraestructura de medios. El contexto y mi participación detrás de cada solución.</p></div>
-<?php $projects = new WP_Query(array('post_type'=>'proyecto','post_status'=>'publish','posts_per_page'=>4,'orderby'=>array('menu_order'=>'ASC','date'=>'DESC')));
-if ($projects->have_posts()) : ?><div class="project-grid"><?php while ($projects->have_posts()) : $projects->the_post(); get_template_part('template-parts/project-card'); endwhile; ?></div><?php wp_reset_postdata(); else : get_template_part('template-parts/experience-cases'); endif; ?>
-<div class="text-center mt-4"><a class="btn-secondary" href="<?php echo esc_url(get_post_type_archive_link('proyecto')); ?>">Explorar proyectos <i class="bx bx-right-arrow-alt" aria-hidden="true"></i></a></div>
-</div></section>
 
-<section id="servicios" class="section-padding bg-darker">
+<section id="proyectos" class="section-padding bg-darker" aria-labelledby="proyectos-title">
     <div class="container">
         <div class="section-header text-center scroll-reveal">
-            <span class="section-tag">Lo que ofrezco</span>
-            <h2 class="section-title">Soluciones para cada etapa de tu proyecto</h2><p class="section-subtitle" style="margin:1rem auto;">Producto digital · Desarrollo web avanzado · Infraestructura y operación. Estas son las especialidades que conecto para resolver necesidades concretas.</p>
+            <span class="section-tag">02 · Proyectos destacados</span>
+            <h2 id="proyectos-title" class="section-title">Sistemas construidos para operar procesos reales</h2>
+            <p class="section-subtitle">Plataformas en las que he trabajado de principio a fin. Cada caso explica el problema, las decisiones técnicas y el estado actual, sin cifras infladas.</p>
         </div>
-
-        <div class="grid-3 mt-4">
-            <a href="<?php echo esc_url( am_service_url('desarrollo-saas-microservicios') ); ?>" class="glass-card flex-column scroll-reveal" style="text-decoration: none;">
-                <div class="icon-box mb-3">
-                    <i class='bx bx-cloud' style="font-size: 28px;"></i>
-                </div>
-                <div class="card-body">
-                    <h3>Desarrollo SaaS y Arquitectura de Microservicios</h3>
-                    <p>Diseño de bases de datos multi-tenant, orquestación con Docker y Traefik, y desarrollo de sistemas en la nube escalables.</p>
-                </div>
-            </a>
-
-            <a href="<?php echo esc_url( am_service_url('streaming-audio-video') ); ?>" class="glass-card flex-column scroll-reveal delay-100" style="text-decoration: none;">
-                <div class="icon-box mb-3">
-                    <i class='bx bx-broadcast' style="font-size: 28px;"></i>
-                </div>
-                <div class="card-body">
-                    <h3>Configuración de Servidores para Streaming de Audio y Video</h3>
-                    <p>Servidores RTMP, distribución de audio y video y arquitecturas simulcast para emisoras, medios y transmisiones en vivo.</p>
-                </div>
-            </a>
-
-            <a href="<?php echo esc_url( am_service_url('administracion-vps-devops') ); ?>" class="glass-card flex-column scroll-reveal delay-200" style="text-decoration: none;">
-                <div class="icon-box mb-3">
-                    <i class='bx bx-server' style="font-size: 28px;"></i>
-                </div>
-                <div class="card-body">
-                    <h3>Administración de Servidores VPS y DevOps</h3>
-                    <p>Gestión técnica, hardening de seguridad, proxies inversos y mantenimiento de la infraestructura web subyacente.</p>
-                </div>
-            </a>
-
-            <a href="<?php echo esc_url( am_service_url('desarrollo-avanzado-wordpress') ); ?>" class="glass-card flex-column scroll-reveal" style="text-decoration: none;">
-                <div class="icon-box mb-3">
-                    <i class='bx bxl-wordpress' style="font-size: 28px;"></i>
-                </div>
-                <div class="card-body">
-                    <h3>Desarrollo Avanzado en WordPress</h3>
-                    <p>Programación de Custom Themes, plugins personalizados y arquitecturas offline-first superando las limitaciones tradicionales.</p>
-                </div>
-            </a>
-
-            <a href="<?php echo esc_url( am_service_url('ecommerce-migraciones') ); ?>" class="glass-card flex-column scroll-reveal delay-100" style="text-decoration: none;">
-                <div class="icon-box mb-3">
-                    <i class='bx bx-cart-alt' style="font-size: 28px;"></i>
-                </div>
-                <div class="card-body">
-                    <h3>E-commerce y Migración de Plataformas</h3>
-                    <p>Migraciones planificadas, inventario e integración de pasarelas de pago y TPV virtuales para modernizar operaciones comerciales.</p>
-                </div>
-            </a>
-
-            <a href="<?php echo esc_url( am_service_url('seo-tecnico') ); ?>" class="glass-card flex-column scroll-reveal delay-200" style="text-decoration: none;">
-                <div class="icon-box mb-3">
-                    <i class='bx bx-trending-up' style="font-size: 28px;"></i>
-                </div>
-                <div class="card-body">
-                    <h3>SEO Técnico y Crecimiento Orgánico Hiperlocal</h3>
-                    <p>Auditorías de rendimiento técnico, consolidación de dominios y posicionamiento en motores de búsqueda para dominar mercados locales.</p>
-                </div>
-            </a>
-
-            <a href="<?php echo esc_url( am_service_url('consultoria-ia-rendimiento') ); ?>" class="glass-card flex-column scroll-reveal" style="text-decoration: none;">
-                <div class="icon-box mb-3">
-                    <i class='bx bx-brain' style="font-size: 28px;"></i>
-                </div>
-                <div class="card-body">
-                    <h3>Consultoría en Integración de IA y Rendimiento Web</h3>
-                    <p>Auditorías de código, optimización de carga e integración de flujos potenciados por Inteligencia Artificial.</p>
-                </div>
-            </a>
-
-            <a href="<?php echo esc_url( am_service_url('infraestructura-fisica-continuidad') ); ?>" class="glass-card flex-column scroll-reveal delay-100" style="text-decoration: none;">
-                <div class="icon-box mb-3">
-                    <i class='bx bx-power-off' style="font-size: 28px;"></i>
-                </div>
-                <div class="card-body">
-                    <h3>Continuidad Operativa e Infraestructura Física</h3>
-                    <p>Asesoría en configuraciones multi-PC, recuperación ante fallos y sistemas de respaldo energético para entornos de alta exigencia.</p>
-                </div>
-            </a>
+        <?php if ( $featured ) : ?>
+        <div class="featured-projects">
+            <?php foreach ( $featured as $index => $project ) :
+                get_template_part( 'template-parts/project-card', null, array( 'project' => $project, 'variant' => $index < 2 ? 'feature' : 'standard', 'reverse' => $index === 1, 'heading' => 'h3' ) );
+            endforeach; ?>
         </div>
+        <?php endif; ?>
+        <div class="text-center mt-4"><a class="btn-secondary" href="<?php echo esc_url( get_post_type_archive_link( 'proyecto' ) ?: home_url( '/proyectos/' ) ); ?>">Ver todos los proyectos <i class="bx bx-right-arrow-alt" aria-hidden="true"></i></a></div>
     </div>
 </section>
-<section id="metodo" class="section-padding bg-gradient"><div class="container"><div class="section-header text-center scroll-reveal"><span class="section-tag">Cómo trabajo</span><h2 class="section-title">Un proceso claro, de principio a fin</h2><p class="section-subtitle">Cada etapa tiene una pregunta que resolver y una entrega que revisar.</p></div><div class="grid-2">
-<?php $steps=array(
-array('01','Diagnóstico y alcance','Entender tu operación, los usuarios y las restricciones. Identificar el problema y acordar prioridades, alcance y criterios de entrega.','bx-search-alt'),
-array('02','Diseño y arquitectura','Definir flujos, datos, integraciones e infraestructura. Revisar la solución propuesta antes de avanzar con su implementación.','bx-network-chart'),
-array('03','Desarrollo y validación','Construir por etapas y revisar avances. Probar los recorridos principales y ajustar con el contexto de uso real.','bx-code-alt'),
-array('04','Despliegue y entrega','Preparar la puesta en producción, documentación y configuración. Acordar el mantenimiento y los siguientes pasos del producto.','bx-rocket'));
-foreach($steps as $step): ?><article class="glass-card scroll-reveal method-card"><div class="icon-box"><i class="bx <?php echo esc_attr($step[3]); ?>" aria-hidden="true"></i></div><span class="step-number"><?php echo esc_html($step[0]); ?></span><h3><?php echo esc_html($step[1]); ?></h3><p><?php echo esc_html($step[2]); ?></p></article><?php endforeach; ?></div></div></section>
 
-<section id="sobre-mi" class="section-padding bg-gradient">
+<section id="especialidades" class="section-padding bg-gradient" aria-labelledby="especialidades-title">
+    <div class="container">
+        <div class="section-header text-center scroll-reveal">
+            <span class="section-tag">03 · Especialidades</span>
+            <h2 id="especialidades-title" class="section-title">Tres áreas, un mismo proceso de ingeniería</h2>
+            <p class="section-subtitle">No son servicios sueltos: cada área cubre una parte del ciclo de vida de un producto digital y se apoya en las otras dos.</p>
+        </div>
+        <?php get_template_part( 'template-parts/specialties', null, array( 'heading' => 'h3' ) ); ?>
+    </div>
+</section>
+
+<section id="capacidades" class="section-padding" aria-labelledby="capacidades-title">
+    <div class="container">
+        <div class="section-header text-center scroll-reveal">
+            <span class="section-tag">04 · Capacidades técnicas</span>
+            <h2 id="capacidades-title" class="section-title">Tecnologías organizadas por función</h2>
+            <p class="section-subtitle">Distingo entre lo que uso a diario, lo que he aplicado en proyectos concretos y las herramientas de apoyo. Todo aparece en repositorios públicos o en proyectos documentados.</p>
+        </div>
+        <?php get_template_part( 'template-parts/capabilities', null, array( 'heading' => 'h3' ) ); ?>
+    </div>
+</section>
+
+<section id="metodo" class="section-padding bg-gradient" aria-labelledby="metodo-title">
+    <div class="container">
+        <div class="section-header text-center scroll-reveal">
+            <span class="section-tag">05 · Cómo desarrollo un producto</span>
+            <h2 id="metodo-title" class="section-title">Del análisis a la evolución</h2>
+            <p class="section-subtitle">Un proceso completo en el que cada etapa termina en algo que puedes revisar.</p>
+        </div>
+        <?php get_template_part( 'template-parts/process' ); ?>
+    </div>
+</section>
+
+<section id="sobre-mi" class="section-padding" aria-labelledby="sobre-mi-title">
     <div class="container">
         <div class="section-header text-left scroll-reveal">
-            <span class="section-tag">Sobre Mí</span>
-            <h2 class="section-title">De la infraestructura al píxel.</h2>
+            <span class="section-tag">06 · Sobre mí</span>
+            <h2 id="sobre-mi-title" class="section-title">Una persona, el ciclo completo</h2>
         </div>
-
         <div class="about-content grid-2 mt-4">
-            <div class="glass-card scroll-reveal">
-                <p style="font-size: 1.1rem; color: var(--color-text-main); margin-bottom: 1rem;">Soy Arturo Merchán, desarrollador Full-Stack en Maturín, Venezuela. Mi trabajo combina interfaces, lógica de negocio e infraestructura: desde plataformas de reservas hasta WordPress personalizado, integraciones y operación de servidores.</p>
-                <p style="color: var(--color-text-muted);">Trabajo sobre el problema y el contexto de cada cliente. Defino el alcance, construyo por etapas y preparo la entrega con documentación y una base mantenible. Puedes conocer mi trayectoria, responsabilidades y formación en la página sobre mí.</p>
-            </div>
-<div class="glass-card scroll-reveal delay-100 expertise-panel"><span class="material-symbols-outlined expertise-icon" aria-hidden="true">hub</span><h3>Del producto a producción</h3><p>Un mismo enfoque para conectar las piezas de tu proyecto.</p><div class="tags"><span>Interfaces y experiencia</span><span>Backend e integraciones</span><span>Despliegue y operación</span></div><a class="btn-secondary mt-4" href="<?php echo esc_url(home_url('/sobre-mi/')); ?>">Conoce mi trayectoria <i class="bx bx-right-arrow-alt" aria-hidden="true"></i></a></div></div></div></section>
-<section id="stack" class="section-padding">
-    <div class="container">
-        <div class="section-header text-center scroll-reveal">
-            <span class="section-tag">Tecnologías</span>
-            <h2 class="section-title">Stack Tecnológico</h2>
-        </div>
-
-        <div class="grid-2 mt-4">
-            <div class="glass-card scroll-reveal">
-                <h3 class="mb-3" style="color: var(--color-goku-orange);">
-                    <span class="material-symbols-outlined icon-margin" style="vertical-align: middle;">code</span>Lenguajes & Front-End
-                </h3>
-                <div class="tags">
-                    <span>TypeScript</span><span>JavaScript</span><span>React</span><span>Astro</span><span>PHP</span><span>HTML5</span><span>CSS3</span><span>Tailwind CSS</span><span>JSON</span><span>WebGL</span><span>Liquid</span><span>Twig</span>
+            <div class="glass-card scroll-reveal about-card">
+                <p class="about-lead">Soy Arturo Merchán, desarrollador de software Full-Stack en Maturín, Venezuela. Desde 2017 trabajo en proyectos web y en los últimos años me he centrado en plataformas completas: reservas y pagos para traslados en Barcelona, un sistema documental para un diario de avisos legales, un directorio médico con app móvil y temas WordPress a medida para medios y comercio.</p>
+                <p>Trabajo de forma directa con cada cliente: analizo el proceso, propongo la arquitectura, desarrollo, despliego y documento. También soy cofundador de Espressivo Venezuela, desde donde colaboro en proyectos para medios y empresas.</p>
+                <div class="action-row mt-4">
+                    <a class="btn-secondary" href="<?php echo esc_url( home_url( '/sobre-mi/' ) ); ?>">Trayectoria y formación <i class="bx bx-right-arrow-alt" aria-hidden="true"></i></a>
+                    <a class="text-link" href="<?php echo esc_url( $cv_url ); ?>" download><i class="bx bxs-file-pdf" aria-hidden="true"></i> Descargar CV (PDF)</a>
                 </div>
             </div>
-            <div class="glass-card scroll-reveal delay-100">
-                <h3 class="mb-3" style="color: var(--color-goku-orange);">
-                    <span class="material-symbols-outlined icon-margin" style="vertical-align: middle;">database</span>Back-End & Bases de Datos
-                </h3>
-                <div class="tags">
-                    <span>Python</span><span>Microservicios</span><span>MySQL/MariaDB</span><span>MongoDB</span>
-                </div>
-            </div>
-            <div class="glass-card scroll-reveal">
-                <h3 class="mb-3" style="color: var(--color-goku-orange);">
-                    <span class="material-symbols-outlined icon-margin" style="vertical-align: middle;">merge_type</span>Versiones & CI/CD
-                </h3>
-                <div class="tags">
-                    <span>Git</span><span>GitHub Actions</span>
-                </div>
-            </div>
-            <div class="glass-card scroll-reveal delay-100">
-                <h3 class="mb-3" style="color: var(--color-goku-orange);">
-                    <span class="material-symbols-outlined icon-margin" style="vertical-align: middle;">router</span>DevOps & Servidores
-                </h3>
-                <div class="tags">
-                    <span>Linux</span><span>Bash</span><span>PowerShell</span><span>Docker</span><span>Dockerfile</span><span>Traefik</span><span>Nginx</span><span>Hostinger VPS</span>
-                </div>
+            <div class="glass-card scroll-reveal delay-100 work-principles">
+                <h3>Cómo trabajo</h3>
+                <ul>
+                    <li><i class="bx bx-user-voice" aria-hidden="true"></i><span><strong>Trato directo.</strong> Hablas con quien diseña y escribe el código, no con intermediarios.</span></li>
+                    <li><i class="bx bx-git-branch" aria-hidden="true"></i><span><strong>Código versionado.</strong> Repositorio con historial, documentación y pruebas desde el inicio.</span></li>
+                    <li><i class="bx bx-test-tube" aria-hidden="true"></i><span><strong>Entorno de pruebas.</strong> Revisas los avances antes de que lleguen a producción.</span></li>
+                    <li><i class="bx bx-lock-alt" aria-hidden="true"></i><span><strong>Secretos fuera del código.</strong> Credenciales en el servidor, nunca en el repositorio.</span></li>
+                </ul>
             </div>
         </div>
     </div>
 </section>
-<section id="codigo" class="section-padding"><div class="container"><div class="glass-card code-banner scroll-reveal"><div><span class="section-tag">Código abierto</span><h2 class="section-title">Las decisiones también están en el código.</h2><p>Explora mis repositorios, experimentos y herramientas. GitHub complementa los proyectos con una mirada a su implementación técnica.</p></div><a class="btn-primary" href="https://github.com/merchandev" target="_blank" rel="noopener noreferrer"><i class="bx bxl-github" aria-hidden="true"></i> Explorar GitHub</a></div></div></section>
 
-<section id="contacto" class="section-padding bg-gradient"><div class="container"><div class="grid-2"><div class="contact-info scroll-reveal"><span class="section-tag">Hablemos de tu proyecto</span><h2 class="section-title mb-4">¿Qué necesitas construir o mejorar?</h2><p class="contact-copy">Cuéntame el problema, el estado actual y los plazos que tienes en mente. Revisemos qué solución necesitas y cómo llevarla a producción.</p><div class="contact-details"><p><i class="bx bx-code-alt" aria-hidden="true"></i> Productos digitales y desarrollo a medida</p><p><i class="bx bx-server" aria-hidden="true"></i> Infraestructura, integraciones y operación</p><p><i class="bx bx-search-alt" aria-hidden="true"></i> Consultoría y auditorías técnicas</p></div><div class="contact-alternatives"><a href="mailto:soporte@merchan.dev"><i class="bx bx-envelope" aria-hidden="true"></i> soporte@merchan.dev</a><a href="https://wa.me/584249677293" target="_blank" rel="noopener noreferrer"><i class="bx bxl-whatsapp" aria-hidden="true"></i> Escríbeme por WhatsApp</a></div></div><div class="glass-card scroll-reveal"><?php get_template_part('template-parts/contact-form'); ?></div></div></div></section>
+<section id="catalogo" class="section-padding bg-darker" aria-labelledby="catalogo-title">
+    <div class="container">
+        <div class="section-header text-center scroll-reveal">
+            <span class="section-tag">07 · Otros proyectos</span>
+            <h2 id="catalogo-title" class="section-title">Más trabajo, organizado por tipo</h2>
+            <p class="section-subtitle">Temas y plugins de WordPress, comercio en Shopify, infraestructura de streaming, aplicaciones sin conexión y experimentos. Los principales tienen caso de estudio; el resto, una ficha breve.</p>
+        </div>
+        <?php if ( am_project_has_published() ) { get_template_part( 'template-parts/project-filters', null, array( 'current' => '' ) ); } ?>
+        <?php if ( $others ) : ?>
+        <div class="project-grid-compact">
+            <?php foreach ( $others as $project ) { get_template_part( 'template-parts/project-card', null, array( 'project' => $project, 'variant' => 'compact', 'heading' => 'h3' ) ); } ?>
+        </div>
+        <?php endif; ?>
+        <div class="catalog-actions">
+            <a class="btn-primary" href="<?php echo esc_url( get_post_type_archive_link( 'proyecto' ) ?: home_url( '/proyectos/' ) ); ?>">Explorar el catálogo completo <i class="bx bx-right-arrow-alt" aria-hidden="true"></i></a>
+            <a class="btn-secondary" href="https://github.com/merchandev" target="_blank" rel="noopener noreferrer"><i class="bx bxl-github" aria-hidden="true"></i> Repositorios en GitHub<span class="screen-reader-text"> (se abre en una pestaña nueva)</span></a>
+        </div>
+    </div>
+</section>
+
+<section id="contacto" class="section-padding bg-gradient" aria-labelledby="contacto-title">
+    <div class="container">
+        <div class="grid-2">
+            <div class="contact-info scroll-reveal">
+                <span class="section-tag">08 · Contacto</span>
+                <h2 id="contacto-title" class="section-title mb-4">¿Qué necesitas construir o mejorar?</h2>
+                <p class="contact-copy">Cuéntame el problema, cómo funciona hoy y qué plazos manejas. Te respondo personalmente con preguntas concretas o con una propuesta de siguiente paso.</p>
+                <div class="contact-details">
+                    <p><i class="bx bx-code-block" aria-hidden="true"></i> Plataformas, sistemas y apps a medida</p>
+                    <p><i class="bx bx-git-merge" aria-hidden="true"></i> Integraciones, pagos y automatización</p>
+                    <p><i class="bx bx-server" aria-hidden="true"></i> Despliegue, infraestructura y mantenimiento</p>
+                </div>
+                <div class="contact-alternatives">
+                    <a href="mailto:soporte@merchan.dev"><i class="bx bx-envelope" aria-hidden="true"></i> soporte@merchan.dev</a>
+                    <a href="https://wa.me/584249677293" target="_blank" rel="noopener noreferrer"><i class="bx bxl-whatsapp" aria-hidden="true"></i> Escríbeme por WhatsApp<span class="screen-reader-text"> (se abre en una pestaña nueva)</span></a>
+                </div>
+            </div>
+            <div class="glass-card scroll-reveal"><?php get_template_part( 'template-parts/contact-form' ); ?></div>
+        </div>
+    </div>
+</section>
 
 <?php get_footer(); ?>

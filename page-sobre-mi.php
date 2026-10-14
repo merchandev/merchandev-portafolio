@@ -12,22 +12,23 @@ get_header(); ?>
     <section id="sobre-mi" class="section-padding bg-gradient">
         <div class="container">
             <div class="section-header text-left scroll-reveal">
-                <span class="section-tag">Perfil Profesional</span>
-                <h1 class="section-title">De la infraestructura al píxel.</h1>
+                <span class="section-tag">Sobre mí · De la infraestructura al píxel</span>
+                <h1 class="section-title">Arturo Merchán, desarrollador de software Full-Stack</h1>
             </div>
             
             <div class="about-content mt-4">
                 <div class="glass-card scroll-reveal" style="margin-bottom: 2rem;">
                     <p style="font-size: 1.15rem; color: var(--color-text-main); margin-bottom: 1rem; line-height: 1.8;">
-                        Soy Arturo Merchán, Programador Full-Stack con más de 10 años de experiencia en desarrollo web. Me especializo en el ecosistema de WordPress, PHP, y desarrollo de bases de datos, combinando habilidades en frontend (TypeScript, Tailwind CSS) y backend para crear soluciones tecnológicas a medida.
+                        Soy Arturo Merchán, desarrollador de software Full-Stack en Maturín, Venezuela. Desde 2017 trabajo en proyectos web: empecé con comercio electrónico en WordPress y hoy diseño y construyo plataformas completas, desde la interfaz y la lógica de negocio hasta la base de datos, las integraciones y el servidor.
                     </p>
                     <p style="color: var(--color-text-muted); font-size: 1.1rem; line-height: 1.8;">
-                        Mi enfoque se centra en la implementación de diseños precisos, optimización de rendimiento (SEO técnico) y la entrega puntual bajo un modelo de trabajo estructurado y eficiente.
+                        Mi trabajo más reciente incluye un sistema de reservas con pagos y portal para hoteles en Barcelona, una plataforma de publicación de avisos legales con verificación por QR, un directorio médico con API y app móvil, y temas WordPress a medida para medios y comercio. Trabajo de forma directa con cada cliente, con código versionado, entornos de prueba y documentación.
                     </p>
-                    <div style="margin-top: 2rem;">
-                        <a href="<?php echo get_template_directory_uri(); ?>/assets/docs/CV_Arturo_Merchan.pdf" download="CV_Arturo_Merchan.pdf" class="btn-primary" target="_blank" style="display: inline-flex; align-items: center; gap: 8px;">
-                            <i class='bx bxs-file-pdf' style="font-size: 1.2rem;"></i> Descargar CV (PDF)
+                    <div class="action-row" style="margin-top: 2rem;">
+                        <a href="<?php echo esc_url( get_template_directory_uri() . '/assets/docs/CV_Arturo_Merchan.pdf' ); ?>" download="CV_Arturo_Merchan.pdf" class="btn-primary">
+                            <i class="bx bxs-file-pdf" aria-hidden="true"></i> Descargar CV (PDF)
                         </a>
+                        <a href="<?php echo esc_url( get_post_type_archive_link( 'proyecto' ) ?: home_url( '/proyectos/' ) ); ?>" class="btn-secondary">Ver proyectos <i class="bx bx-right-arrow-alt" aria-hidden="true"></i></a>
                     </div>
                 </div>
             </div>
@@ -157,49 +158,16 @@ get_header(); ?>
     </section>
 
     <!-- ========================================== -->
-    <!-- STACK TECNOLOGICO                          -->
+    <!-- CAPACIDADES TÉCNICAS (fuente única: inc/capabilities.php) -->
     <!-- ========================================== -->
-    <section id="stack" class="section-padding bg-darker">
+    <section id="stack" class="section-padding bg-darker" aria-labelledby="stack-title">
         <div class="container">
             <div class="section-header text-center scroll-reveal">
                 <span class="section-tag">Tecnologías</span>
-                <h2 class="section-title">Stack Tecnológico</h2>
+                <h2 id="stack-title" class="section-title">Capacidades técnicas</h2>
+                <p class="section-subtitle">Organizadas por función y por nivel de uso real en proyectos.</p>
             </div>
-            
-            <div class="grid-2 mt-4">
-                <div class="glass-card scroll-reveal">
-                    <h3 class="mb-3" style="color: var(--color-goku-orange);">
-                        <span class="material-symbols-outlined icon-margin" style="vertical-align: middle;">code</span>Lenguajes & Front-End
-                    </h3>
-                    <div class="tags">
-                        <span>TypeScript</span><span>JavaScript</span><span>React</span><span>Astro</span><span>PHP</span><span>HTML5</span><span>CSS3</span><span>Tailwind CSS</span><span>JSON</span><span>WebGL</span><span>Liquid</span><span>Twig</span>
-                    </div>
-                </div>
-                <div class="glass-card scroll-reveal delay-100">
-                    <h3 class="mb-3" style="color: var(--color-goku-orange);">
-                        <span class="material-symbols-outlined icon-margin" style="vertical-align: middle;">database</span>Back-End & Bases de Datos
-                    </h3>
-                    <div class="tags">
-                        <span>Python</span><span>Microservicios</span><span>MySQL/MariaDB</span><span>MongoDB</span>
-                    </div>
-                </div>
-                <div class="glass-card scroll-reveal">
-                    <h3 class="mb-3" style="color: var(--color-goku-orange);">
-                        <span class="material-symbols-outlined icon-margin" style="vertical-align: middle;">merge_type</span>Versiones & CI/CD
-                    </h3>
-                    <div class="tags">
-                        <span>Git</span><span>GitHub Actions</span>
-                    </div>
-                </div>
-                <div class="glass-card scroll-reveal delay-100">
-                    <h3 class="mb-3" style="color: var(--color-goku-orange);">
-                        <span class="material-symbols-outlined icon-margin" style="vertical-align: middle;">router</span>DevOps & Servidores
-                    </h3>
-                    <div class="tags">
-                        <span>Linux</span><span>Bash</span><span>PowerShell</span><span>Docker</span><span>Dockerfile</span><span>Traefik</span><span>Nginx</span><span>Hostinger VPS</span>
-                    </div>
-                </div>
-            </div>
+            <?php get_template_part( 'template-parts/capabilities', null, array( 'heading' => 'h3' ) ); ?>
         </div>
     </section>
 </div>
