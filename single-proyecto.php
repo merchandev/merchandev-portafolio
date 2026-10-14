@@ -50,7 +50,7 @@ while ( have_posts() ) :
 
     <div class="container">
         <figure class="case-cover<?php echo $project['image_id'] ? '' : ' is-typographic'; ?>">
-            <div class="browser-frame" aria-hidden="true"><span></span><span></span><span></span><em><?php echo esc_html( $project['demo'] ? wp_parse_url( $project['demo'], PHP_URL_HOST ) : $project['title'] ); ?></em></div>
+            <div class="browser-frame" aria-hidden="true"><span></span><span></span><span></span><em><?php echo esc_html( am_project_frame_label( $project ) ); ?></em></div>
             <?php echo am_project_cover( $project, 'full', array( 'loading' => 'eager', 'fetchpriority' => 'high', 'sizes' => '(max-width: 1280px) 100vw, 1200px' ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
         </figure>
 
@@ -93,6 +93,9 @@ while ( have_posts() ) :
                         <p class="case-note">La captura disponible es la portada de este caso. Otras vistas (paneles internos, flujos) están pendientes de documentar con datos anonimizados.</p>
                     <?php else : ?>
                         <p class="case-note is-pending">Capturas pendientes de documentar con datos anonimizados y permiso de publicación.</p>
+                    <?php endif; ?>
+                    <?php if ( $project['capture_updated'] ) : ?>
+                        <p class="case-note">La portada se actualiza automáticamente desde la web pública cuando cambia su interfaz. Última actualización: <?php echo esc_html( mysql2date( 'j \d\e F \d\e Y', $project['capture_updated'] ) ); ?>.</p>
                     <?php endif; ?>
                 </section>
 

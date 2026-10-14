@@ -18,7 +18,7 @@ $title_id = 'proyecto-' . sanitize_html_class( $project['slug'] ) . '-' . $varia
 <article class="<?php echo esc_attr( implode( ' ', $classes ) ); ?> scroll-reveal" aria-labelledby="<?php echo esc_attr( $title_id ); ?>" data-categories="<?php echo esc_attr( implode( ' ', $project['categories'] ) ); ?>">
     <?php if ( $variant !== 'compact' ) : ?>
     <div class="project-media">
-        <div class="browser-frame" aria-hidden="true"><span></span><span></span><span></span><em><?php echo esc_html( $project['demo'] ? wp_parse_url( $project['demo'], PHP_URL_HOST ) : $project['title'] ); ?></em></div>
+        <div class="browser-frame" aria-hidden="true"><span></span><span></span><span></span><em><?php echo esc_html( am_project_frame_label( $project ) ); ?></em></div>
         <?php if ( $case_url ) : ?><a href="<?php echo esc_url( $case_url ); ?>" tabindex="-1" aria-hidden="true"><?php endif; ?>
         <?php echo am_project_cover( $project, 'large', array( 'loading' => ! empty( $args['eager'] ) ? 'eager' : 'lazy', 'sizes' => $variant === 'feature' ? '(max-width: 992px) 100vw, 60vw' : '(max-width: 768px) 100vw, 45vw' ) ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in am_project_cover(). ?>
         <?php if ( $case_url ) : ?></a><?php endif; ?>

@@ -11,7 +11,7 @@
  */
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-const AM_SEED_VERSION = '2026.10.1';
+const AM_SEED_VERSION = '2026.10.2';
 
 function am_seed_categories() {
     return array(
@@ -44,7 +44,7 @@ function am_seed_projects() {
             'security' => 'Credenciales fuera de Git (constantes de wp-config.php), precio y capacidad calculados en el servidor, permisos por hotel y registro de auditoría. El repositorio incluye PHPUnit, PHPStan, WordPress Coding Standards, ESLint y Playwright, y GitHub Actions ejecuta una puerta de calidad sobre cada cambio.',
             'results' => 'Web en producción en metransfers.es. Repositorio público con el historial completo del proyecto (más de 300 commits). No publico cifras de negocio del cliente.',
             'stack' => 'PHP 8.2, WordPress, MySQL, JavaScript, Redsys, Google Maps Platform, PHPUnit, PHPStan, Playwright, GitHub Actions',
-            'demo' => 'https://metransfers.es/', 'repository' => $gh . 'metransfers.es',
+            'capture_auto' => true, 'demo' => 'https://metransfers.es/', 'repository' => $gh . 'metransfers.es',
             'images' => array( array( 'file' => 'metransfers-portada.webp', 'alt' => 'Portada de metransfers.es con el formulario «Calcula tu traslado» (origen, destino, fecha y hora)' ) ),
             'related' => array( 'metransfers-saas' ),
         ),
@@ -64,7 +64,7 @@ function am_seed_projects() {
             'security' => 'JWT con refresh tokens, contraseñas con Argon2, autenticación en dos pasos, cifrado de campos sensibles con AES-256-GCM y rotación de claves, auditoría, límites de peticiones y cabeceras de seguridad. GitHub Actions ejecuta integración continua, búsqueda de secretos con Gitleaks, auditoría de dependencias, análisis con OWASP ZAP y una comprobación periódica de disponibilidad. El repositorio incluye scripts de backup y de prueba de restauración. La plataforma no es un dispositivo médico ni cuenta con certificaciones.',
             'results' => 'Web pública en guiamedicamonagas.com. La app Android está generada como build de pruebas con firma de desarrollo y no está publicada en las tiendas.',
             'stack' => 'Next.js, NestJS, TypeScript, PostgreSQL, Prisma, React Native, Expo, Redis, Meilisearch, Socket.IO, Docker, Caddy, Vitest, Playwright',
-            'demo' => 'https://guiamedicamonagas.com/', 'repository' => $gh . 'guiamedicamonagas',
+            'capture_auto' => true, 'demo' => 'https://guiamedicamonagas.com/', 'repository' => $gh . 'guiamedicamonagas',
             'links' => 'App móvil (repositorio) | ' . $gh . 'GUIAMEDICA_APP',
             'images' => array(
                 array( 'file' => 'guia-medica-portada.webp', 'alt' => 'Portada de guiamedicamonagas.com: «Encuentra un médico de confianza en Monagas» con buscador por especialidad y municipio' ),
@@ -88,7 +88,7 @@ function am_seed_projects() {
             'security' => 'Roles jerárquicos con política de permisos, sesiones con expiración, política de contraseñas, auditoría con registro de IP, configuración por variables de entorno y scripts de mantenimiento separados del despliegue normal. GitHub Actions ejecuta la integración continua del repositorio.',
             'results' => 'Sistema desplegado en diariomercantil.com. Repositorio público con más de 470 commits.',
             'stack' => 'PHP 8, MySQL, React, TypeScript, Vite, Tailwind CSS, PHPMailer, FPDF, Docker, Traefik, Caddy, PHPUnit',
-            'demo' => 'https://diariomercantil.com/', 'repository' => $gh . 'Diario-Mercantil',
+            'capture_auto' => true, 'demo' => 'https://diariomercantil.com/', 'repository' => $gh . 'Diario-Mercantil',
             'images' => array(),
             'related' => array( 'cms-editorial', 'guia-medica-monagas' ),
         ),
@@ -128,7 +128,7 @@ function am_seed_projects() {
             'security' => 'La activación del tema registra tipos de contenido y permisos sin crear ni sobrescribir contenido editorial. La integración continua audita dependencias, revisa la sintaxis de PHP, JavaScript y CSS, comprueba los tipos y verifica el paquete.',
             'results' => 'Sitio en producción en mmorichal.com. Los últimos runs de control de calidad en GitHub Actions finalizaron correctamente (septiembre de 2026).',
             'stack' => 'WordPress, PHP, TypeScript, Vite, Tailwind CSS, Swiper, GitHub Actions',
-            'demo' => 'https://mmorichal.com/', 'repository' => $gh . 'tema-motoresmorichal',
+            'capture_auto' => true, 'demo' => 'https://mmorichal.com/', 'repository' => $gh . 'tema-motoresmorichal',
             'images' => array(
                 array( 'file' => 'motores-morichal-portada.webp', 'alt' => 'Portada de mmorichal.com con el menú del concesionario y el carrusel principal' ),
                 array( 'file' => 'motores-morichal-movil.webp', 'alt' => 'Vista móvil de la web de Motores Morichal' ),
@@ -290,7 +290,7 @@ function am_seed_projects() {
             'sector' => 'Marca personal',
             'excerpt' => 'Tema WordPress propio de este portafolio: fondo animado en Canvas 2D, catálogo de proyectos administrable, casos de estudio y formulario con registro de solicitudes y aviso por correo.',
             'stack' => 'WordPress, PHP, JavaScript, CSS, Canvas 2D',
-            'demo' => 'https://merchan.dev/', 'repository' => $gh . 'merchandev-portafolio',
+            'capture_auto' => true, 'demo' => 'https://merchan.dev/', 'repository' => $gh . 'merchandev-portafolio',
         ),
     );
 }
@@ -455,7 +455,11 @@ function am_find_post_by_slug( $slug, $post_type ) {
 /** Sube (una sola vez) una captura del tema a la biblioteca de medios. */
 function am_seed_attachment( $file, $alt, $parent_id ) {
     $existing = get_posts( array( 'post_type' => 'attachment', 'post_status' => 'inherit', 'numberposts' => 1, 'meta_key' => '_am_seed_image', 'meta_value' => $file, 'fields' => 'ids' ) );
-    if ( $existing ) { return (int) $existing[0]; }
+    if ( $existing ) {
+        // Instalaciones anteriores: marca el tipo de captura para la actualización automática.
+        if ( ! get_post_meta( $existing[0], '_am_capture_kind', true ) && preg_match( '~-(portada|movil)\.~', $file, $kind ) ) { update_post_meta( $existing[0], '_am_capture_kind', $kind[1] === 'movil' ? 'mobile' : 'desktop' ); }
+        return (int) $existing[0];
+    }
     $path = get_theme_file_path( 'assets/image/proyectos/' . $file );
     if ( ! is_readable( $path ) ) { return 0; }
     $upload = wp_upload_bits( $file, null, file_get_contents( $path ) );
@@ -469,16 +473,130 @@ function am_seed_attachment( $file, $alt, $parent_id ) {
     wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $upload['file'] ) );
     update_post_meta( $id, '_wp_attachment_image_alt', $alt );
     update_post_meta( $id, '_am_seed_image', $file );
+    if ( preg_match( '~-(portada|movil)\.~', $file, $kind ) ) { update_post_meta( $id, '_am_capture_kind', $kind[1] === 'movil' ? 'mobile' : 'desktop' ); }
     return (int) $id;
 }
 
 /** Marcador que dejaba la versión anterior del importador en borradores vacíos. */
+/**
+ * Escribe los campos sembrados de un proyecto respetando las ediciones del administrador:
+ * - campo vacío: se completa;
+ * - campo que conserva el valor que escribió el tema (huella en _am_seed_snapshot): se
+ *   actualiza al texto nuevo del tema, o se vacía si el tema ya no lo usa;
+ * - cualquier otro valor es una edición del administrador y no se toca.
+ *
+ * @return bool true si se cambió algún valor que ya existía.
+ */
+function am_seed_apply_fields( WP_Post $post, array $seed, array $values, $placeholder = false ) {
+    $snapshot = json_decode( (string) get_post_meta( $post->ID, '_am_seed_snapshot', true ), true );
+    $snapshot = is_array( $snapshot ) ? $snapshot : array();
+    $fields = array( 'post_title' => $seed['title'], 'post_excerpt' => $seed['excerpt'] );
+    foreach ( $values as $key => $value ) { $fields[ $key ] = am_sanitize_project_field( $key, $value ); }
+    $changed = false;
+    $post_update = array( 'ID' => $post->ID );
+    foreach ( $fields as $key => $value ) {
+        $is_post_field = strpos( $key, 'post_' ) === 0;
+        $current = $is_post_field ? (string) $post->$key : (string) get_post_meta( $post->ID, '_am_' . $key, true );
+        if ( $current === $value ) { $snapshot[ $key ] = md5( $value ); continue; }
+        $theme_wrote = isset( $snapshot[ $key ] ) && hash_equals( (string) $snapshot[ $key ], md5( $current ) );
+        if ( $current !== '' && ! $placeholder && ! $theme_wrote ) { continue; } // Edición del administrador.
+        if ( $current !== '' ) { $changed = true; }
+        if ( $is_post_field ) { $post_update[ $key ] = $value; }
+        elseif ( $value === '' ) { delete_post_meta( $post->ID, '_am_' . $key ); }
+        else { update_post_meta( $post->ID, '_am_' . $key, $value ); }
+        $snapshot[ $key ] = md5( $value );
+    }
+    if ( $placeholder ) { $post_update += array( 'post_content' => '', 'post_status' => 'publish', 'menu_order' => $seed['order'] ); }
+    if ( count( $post_update ) > 1 ) { wp_update_post( $post_update ); }
+    update_post_meta( $post->ID, '_am_seed_snapshot', wp_json_encode( $snapshot ) );
+    return $changed;
+}
+
+/** Valores que importó la versión 2026.10.1 de proyectos que después cambiaron de identidad. */
+function am_seed_legacy_values() {
+    return array(
+        'espressivo-editorial' => array(
+            'post_title' => 'Espressivo Editorial',
+            'post_excerpt' => 'Tema y framework WordPress para diarios digitales: portada editorial, SEO propio sin plugins, gestor de publicidad, clasificados, portada impresa del día y radio en vivo. Instalación de referencia: Diario El Oriental.',
+            'sector' => 'Medios digitales · Prensa regional',
+            'role' => 'Desarrollo del tema y de sus módulos (SEO, publicidad, clasificados, reportes y seguridad) como base reutilizable de Espressivo Venezuela.',
+            'context' => 'Diario El Oriental, un periódico de Monagas con más de cuatro décadas de trayectoria, necesitaba un portal de noticias propio. El trabajo se planteó como una base reutilizable para otras editoriales.',
+            'problem' => 'Los portales de noticias en WordPress suelen acumular plugins para SEO, anuncios, formularios y rendimiento, lo que complica el mantenimiento y la velocidad.',
+            'objective' => 'Un tema editorial con las funciones clave integradas, administrable por la redacción y replicable para otros medios con su propia marca.',
+            'architecture' => 'Tema WordPress con módulos independientes (SEO, gestor de anuncios, clasificados, portada del día, reportes, seguridad y marca blanca), tipos de contenido para carteles y clasificados, y navegación sin recarga con Swup. Generación de PDF con Dompdf instalado mediante Composer.',
+            'features' => "Portada editorial con noticia principal, portada impresa del día y bloques por sección.\nScroll infinito y carga incremental sin repetir ni saltar noticias.\nNavegación sin recarga que mantiene la radio en vivo sonando entre páginas.\nMódulo SEO propio con tabla indexable, Open Graph y panel con datos de Google Site Kit.\nGestor de publicidad y clasificados por tipo.\nBuscador predictivo, modo oscuro y barra de progreso de lectura.",
+            'challenges' => "Guardar los datos SEO en una tabla propia en lugar de wp_postmeta para consultarlos y mantenerlos de forma más eficiente.\nMantener el reproductor de radio activo entre páginas sin convertir el sitio en una aplicación de una sola página.",
+            'security' => 'Roles editoriales y un módulo de seguridad propio del tema. Las dependencias de Composer están versionadas en el repositorio.',
+            'results' => 'En producción en diarioeloriental.com.',
+            'stack' => 'WordPress, PHP, JavaScript, Swup, Dompdf, Composer, Google Site Kit',
+            'demo' => 'https://diarioeloriental.com/',
+        ),
+    );
+}
+
+/** Capturas de la publicación original que dejaron de representar a CMS-Editorial. */
+function am_seed_legacy_image_ids() {
+    return get_posts( array( 'post_type' => 'attachment', 'post_status' => 'inherit', 'numberposts' => -1, 'fields' => 'ids',
+        'meta_query' => array( array( 'key' => '_am_seed_image', 'value' => array( 'espressivo-el-oriental-portada.webp', 'espressivo-el-oriental-movil.webp' ), 'compare' => 'IN' ) ) ) );
+}
+
+/**
+ * 2026.10.2: «Espressivo Editorial» pasa a ser «CMS-Editorial» (tema de marca blanca).
+ * Se conserva el mismo registro (la URL antigua redirige con 301), se marcan como escritos
+ * por el tema los valores importados en 2026.10.1 para que el bucle general los actualice
+ * (lo que hayas editado se conserva) y se retiran del proyecto las capturas de la
+ * publicación original.
+ */
+function am_seed_migrate_legacy( array &$report ) {
+    $old = am_find_post_by_slug( 'espressivo-editorial', 'proyecto' );
+    if ( ! $old || $old->post_status === 'trash' ) { return; }
+    $new = am_find_post_by_slug( 'cms-editorial', 'proyecto' );
+    if ( $new ) {
+        // Ya existe CMS-Editorial (lo creó una importación anterior): el registro antiguo, si sigue
+        // como lo generó el tema, va a la papelera (recuperable) y su URL redirige al nuevo.
+        $legacy = am_seed_legacy_values()['espressivo-editorial'];
+        if ( $old->post_title === $legacy['post_title'] && get_post_meta( $old->ID, '_am_demo', true ) === $legacy['demo'] ) {
+            wp_trash_post( $old->ID );
+            if ( ! in_array( 'espressivo-editorial', (array) get_post_meta( $new->ID, '_wp_old_slug' ), true ) ) { add_post_meta( $new->ID, '_wp_old_slug', 'espressivo-editorial' ); }
+            $report['migrados'][] = 'Espressivo Editorial (duplicado) enviado a la papelera; su URL redirige a /proyectos/cms-editorial/';
+        }
+        return;
+    }
+    $snapshot = json_decode( (string) get_post_meta( $old->ID, '_am_seed_snapshot', true ), true );
+    $snapshot = is_array( $snapshot ) ? $snapshot : array();
+    foreach ( am_seed_legacy_values()['espressivo-editorial'] as $key => $value ) {
+        if ( ! isset( $snapshot[ $key ] ) ) { $snapshot[ $key ] = md5( strpos( $key, 'post_' ) === 0 ? $value : am_sanitize_project_field( $key, $value ) ); }
+    }
+    update_post_meta( $old->ID, '_am_seed_snapshot', wp_json_encode( $snapshot ) );
+    wp_update_post( array( 'ID' => $old->ID, 'post_name' => 'cms-editorial' ) ); // WordPress guarda el slug anterior y redirige.
+    $legacy = array_map( 'intval', am_seed_legacy_image_ids() );
+    if ( in_array( (int) get_post_thumbnail_id( $old->ID ), $legacy, true ) ) { delete_post_thumbnail( $old->ID ); }
+    $gallery = array_diff( array_map( 'intval', array_filter( explode( ',', (string) get_post_meta( $old->ID, '_am_gallery', true ) ) ) ), $legacy );
+    if ( $gallery ) { update_post_meta( $old->ID, '_am_gallery', implode( ',', $gallery ) ); } else { delete_post_meta( $old->ID, '_am_gallery' ); }
+    $report['migrados'][] = 'Espressivo Editorial → CMS-Editorial (la URL anterior redirige a /proyectos/cms-editorial/)';
+}
+
+/** Borra las capturas de la publicación original si ya no se usan en ningún contenido. */
+function am_seed_remove_unused_legacy_images( array &$report ) {
+    global $wpdb;
+    $in_galleries = array();
+    foreach ( $wpdb->get_col( "SELECT meta_value FROM {$wpdb->postmeta} WHERE meta_key = '_am_gallery'" ) as $list ) {
+        $in_galleries = array_merge( $in_galleries, array_map( 'intval', explode( ',', (string) $list ) ) );
+    }
+    foreach ( am_seed_legacy_image_ids() as $id ) {
+        $file = basename( (string) get_attached_file( $id ) );
+        $as_thumbnail = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->postmeta} WHERE meta_key = '_thumbnail_id' AND meta_value = %s", (string) $id ) );
+        $in_content = $file ? (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM {$wpdb->posts} WHERE post_type NOT IN ('attachment','revision') AND post_content LIKE %s", '%' . $wpdb->esc_like( $file ) . '%' ) ) : 0;
+        if ( ! $as_thumbnail && ! $in_content && ! in_array( (int) $id, $in_galleries, true ) && wp_delete_attachment( $id, true ) ) { $report['retirados'][] = $file; }
+    }
+}
+
 function am_seed_is_placeholder( WP_Post $post ) {
     return strpos( $post->post_content, 'Documentar el proceso anterior y la necesidad real.' ) !== false;
 }
 
 function am_run_portfolio_import() {
-    $report = array( 'creados' => array(), 'completados' => array(), 'servicios_actualizados' => array(), 'servicios_personalizados' => array(), 'errores' => array() );
+    $report = array( 'creados' => array(), 'migrados' => array(), 'textos_actualizados' => array(), 'completados' => array(), 'servicios_actualizados' => array(), 'servicios_personalizados' => array(), 'retirados' => array(), 'errores' => array() );
     if ( ! post_type_exists( 'proyecto' ) ) { am_register_projects(); }
     if ( ! post_type_exists( 'servicio' ) ) { am_register_servicios_cpt(); }
 
@@ -512,6 +630,7 @@ function am_run_portfolio_import() {
     }
 
     // Proyectos.
+    am_seed_migrate_legacy( $report );
     $ids = array();
     foreach ( am_seed_projects() as $seed ) {
         $post = am_find_post_by_slug( $seed['slug'], 'proyecto' );
@@ -526,10 +645,6 @@ function am_run_portfolio_import() {
             $post = get_post( $id );
             $report['creados'][] = $seed['title'];
         } else {
-            $update = array( 'ID' => $post->ID );
-            if ( $placeholder ) { $update += array( 'post_content' => '', 'post_status' => 'publish', 'post_title' => $seed['title'], 'menu_order' => $seed['order'] ); }
-            if ( ! has_excerpt( $post ) ) { $update['post_excerpt'] = $seed['excerpt']; }
-            if ( count( $update ) > 1 ) { wp_update_post( $update ); }
             $report['completados'][] = $seed['title'];
         }
         $ids[ $seed['slug'] ] = $post->ID;
@@ -537,14 +652,12 @@ function am_run_portfolio_import() {
         $values = array(
             'featured' => ! empty( $seed['featured'] ) ? '1' : '', 'primary_category' => $seed['primary'], 'specialties' => implode( ',', $seed['specialties'] ?? array() ),
         );
+        if ( ! empty( $seed['demo'] ) && ! empty( $seed['capture_auto'] ) ) { $values['capture_auto'] = '1'; }
         foreach ( array( 'status', 'sector', 'period', 'role', 'context', 'problem', 'objective', 'architecture', 'features', 'challenges', 'security', 'results', 'stack', 'demo', 'repository', 'links' ) as $key ) {
             $values[ $key ] = $seed[ $key ] ?? '';
         }
-        foreach ( $values as $key => $value ) {
-            $value = am_sanitize_project_field( $key, $value );
-            // Solo se completan campos vacíos: nunca se pisa lo que haya editado el administrador.
-            if ( $value !== '' && ( $placeholder || get_post_meta( $post->ID, '_am_' . $key, true ) === '' ) ) { update_post_meta( $post->ID, '_am_' . $key, $value ); }
-        }
+        $updated = am_seed_apply_fields( $post, $seed, $values, $placeholder );
+        if ( $updated && ! in_array( $seed['title'], $report['creados'], true ) ) { $report['textos_actualizados'][] = $seed['title']; }
         $gallery = array();
         foreach ( $seed['images'] ?? array() as $image ) {
             $attachment = am_seed_attachment( $image['file'], $image['alt'], $post->ID );
@@ -560,6 +673,7 @@ function am_run_portfolio_import() {
         if ( $related ) { update_post_meta( $ids[ $seed['slug'] ], '_am_related', implode( ',', $related ) ); }
     }
 
+    am_seed_remove_unused_legacy_images( $report );
     flush_rewrite_rules( false );
     if ( ! $report['errores'] ) { update_option( 'am_portfolio_seed_version', AM_SEED_VERSION ); }
     return $report;
@@ -576,13 +690,23 @@ function am_setup_portfolio() {
 }
 add_action( 'after_switch_theme', 'am_setup_portfolio' );
 
+// Al actualizar los archivos del tema no se vuelve a activar: si la instalación ya importó una
+// versión anterior, la migración se aplica en la siguiente visita de un administrador.
+add_action( 'admin_init', function () {
+    if ( wp_doing_ajax() || ! current_user_can( 'manage_options' ) ) { return; }
+    $stored = (string) get_option( 'am_portfolio_seed_version' );
+    if ( $stored === '' || $stored === AM_SEED_VERSION || get_transient( 'am_portfolio_seed_attempt' ) ) { return; }
+    set_transient( 'am_portfolio_seed_attempt', 1, HOUR_IN_SECONDS ); // Si falla, no se reintenta en cada página.
+    set_transient( 'am_portfolio_import_report', am_setup_portfolio(), 5 * MINUTE_IN_SECONDS );
+} );
+
 add_action( 'admin_notices', function () {
     if ( ! current_user_can( 'manage_options' ) ) { return; }
     $report = get_transient( 'am_portfolio_import_report' );
     if ( $report ) {
         delete_transient( 'am_portfolio_import_report' );
         echo '<div class="notice notice-success is-dismissible"><p><strong>Merchan.Dev:</strong> importación terminada.</p><ul style="list-style:disc;padding-left:20px">';
-        $labels = array( 'creados' => 'Creados', 'completados' => 'Ya existían (solo se completaron campos vacíos)', 'servicios_actualizados' => 'Servicios con textos nuevos', 'servicios_personalizados' => 'Servicios editados por ti que no se modificaron', 'errores' => 'Errores' );
+        $labels = array( 'creados' => 'Creados', 'migrados' => 'Migrados', 'textos_actualizados' => 'Textos del tema actualizados (sin ediciones tuyas)', 'retirados' => 'Capturas antiguas retiradas', 'completados' => 'Revisados (tus ediciones se conservan)', 'servicios_actualizados' => 'Servicios con textos nuevos', 'servicios_personalizados' => 'Servicios editados por ti que no se modificaron', 'errores' => 'Errores' );
         foreach ( $labels as $key => $label ) {
             if ( ! empty( $report[ $key ] ) ) { echo '<li>' . esc_html( $label . ': ' . implode( ', ', $report[ $key ] ) ) . '</li>'; }
         }

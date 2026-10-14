@@ -339,6 +339,7 @@ require_once get_template_directory() . '/inc/specialties.php';
 require_once get_template_directory() . '/inc/capabilities.php';
 require_once get_template_directory() . '/inc/seed.php';
 require_once get_template_directory() . '/inc/seo.php';
+require_once get_template_directory() . '/inc/captures.php';
 
 
 

@@ -57,6 +57,28 @@ $check( strpos( get_post_field( 'post_content', $service->ID ), 'Texto propio de
 $check( in_array( get_the_title( $service ), $report['servicios_personalizados'], true ), 'el informe lista el servicio personalizado' );
 $check( empty( $report['errores'] ), 'importación sin errores' );
 
+// Textos del tema: un campo que conserva el texto que escribió el tema se actualiza; uno editado, no.
+$snapshot = json_decode( (string) get_post_meta( $rotec->ID, '_am_seed_snapshot', true ), true ) ?: array();
+update_post_meta( $rotec->ID, '_am_role', 'Texto antiguo del tema' );
+$snapshot['role'] = md5( 'Texto antiguo del tema' );
+update_post_meta( $rotec->ID, '_am_seed_snapshot', wp_json_encode( $snapshot ) );
+$report = am_run_portfolio_import();
+$seed_rotec = wp_list_filter( am_seed_projects(), array( 'slug' => 'rotec' ) );
+$check( get_post_meta( $rotec->ID, '_am_role', true ) === reset( $seed_rotec )['role'], 'un texto generado por el tema se actualiza a la versión nueva' );
+$check( get_post_meta( $rotec->ID, '_am_sector', true ) === 'Editado por el administrador', 'un texto editado se conserva aunque cambie el tema' );
+$check( in_array( 'Rotec Corporativo', $report['textos_actualizados'], true ), 'el informe lista los textos actualizados' );
+
+// Migración 2026.10.2: un «Espressivo Editorial» generado por la versión anterior no queda duplicado.
+$legacy = am_seed_legacy_values()['espressivo-editorial'];
+$old_id = wp_insert_post( array( 'post_type' => 'proyecto', 'post_status' => 'publish', 'post_name' => 'espressivo-editorial', 'post_title' => $legacy['post_title'], 'post_excerpt' => $legacy['post_excerpt'] ) );
+update_post_meta( $old_id, '_am_demo', $legacy['demo'] );
+$report = am_run_portfolio_import();
+$cms = $by_slug( 'cms-editorial', 'proyecto' );
+$check( get_post_status( $old_id ) === 'trash' && $cms && get_post_status( $cms ) === 'publish', 'el duplicado antiguo va a la papelera y CMS-Editorial sigue publicado' );
+$check( in_array( 'espressivo-editorial', (array) get_post_meta( $cms->ID, '_wp_old_slug' ), true ), 'la URL antigua redirige a CMS-Editorial' );
+$check( count( get_posts( array( 'post_type' => 'proyecto', 'post_status' => 'publish', 'post_name__in' => array( 'espressivo-editorial', 'cms-editorial' ), 'numberposts' => -1, 'fields' => 'ids' ) ) ) === 1, 'un solo proyecto editorial publicado' );
+wp_delete_post( $old_id, true );
+
 // Restaurar el estado inicial.
 wp_untrash_post( $zyrus->ID );
 wp_update_post( array( 'ID' => $zyrus->ID, 'post_status' => 'publish', 'post_name' => 'zyrus' ) );

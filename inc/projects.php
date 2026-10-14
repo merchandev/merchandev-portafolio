@@ -57,6 +57,7 @@ function am_project_fields() {
         'repository'        => array( 'label' => 'URL del repositorio público', 'type' => 'url' ),
         'links'             => array( 'label' => 'Otros enlaces', 'type' => 'lines', 'help' => 'Uno por línea con el formato «Texto | https://…».' ),
         'gallery'           => array( 'label' => 'Galería de capturas', 'type' => 'gallery', 'help' => 'Capturas reales y sin datos personales. La imagen destacada se usa como portada.' ),
+        'capture_auto'      => array( 'label' => 'Actualizar capturas automáticamente', 'type' => 'checkbox', 'help' => 'Cada 24 horas se revisa la URL pública: si la interfaz cambió, se toman capturas nuevas (escritorio y móvil); si no, se conservan. Desactívalo si prefieres elegir las capturas a mano.' ),
         'related'           => array( 'label' => 'Proyectos relacionados', 'type' => 'related' ),
     );
 }
@@ -157,6 +158,7 @@ function am_project_meta_box( $post ) {
                 echo '<textarea class="widefat" rows="' . ( $field['type'] === 'lines' ? 5 : 3 ) . '" id="' . esc_attr( $id ) . '" name="am_project[' . esc_attr( $key ) . ']">' . esc_textarea( $value ) . '</textarea>';
         }
         if ( ! empty( $field['help'] ) ) { echo '<p class="description">' . esc_html( $field['help'] ) . '</p>'; }
+        if ( $key === 'capture_auto' && function_exists( 'am_capture_status_text' ) && am_capture_status_text( $post->ID ) ) { echo '<p class="description"><strong>Última revisión:</strong> ' . esc_html( am_capture_status_text( $post->ID ) ) . '</p>'; }
         echo '</td></tr>';
     }
     echo '</tbody></table>';
@@ -193,7 +195,10 @@ add_filter( 'manage_proyecto_posts_columns', function ( $columns ) {
 add_action( 'manage_proyecto_posts_custom_column', function ( $column, $post_id ) {
     if ( $column === 'am_featured' ) { echo get_post_meta( $post_id, '_am_featured', true ) ? '★' : '—'; }
     if ( $column === 'am_status' ) { echo esc_html( am_project_status_label( get_post_meta( $post_id, '_am_status', true ) ) ?: '—' ); }
-    if ( $column === 'am_capture' ) { echo has_post_thumbnail( $post_id ) ? 'Sí' : '<span style="color:#b26200">Pendiente</span>'; }
+    if ( $column === 'am_capture' ) {
+        echo has_post_thumbnail( $post_id ) ? 'Sí' : '<span style="color:#b26200">Pendiente</span>';
+        if ( get_post_meta( $post_id, '_am_capture_auto', true ) === '1' ) { $status = function_exists( 'am_capture_status' ) ? am_capture_status( $post_id ) : array(); echo '<br><small>Automática' . ( $status ? ' · ' . esc_html( $status['estado'] . ' ' . mysql2date( 'j M', $status['fecha'] ) ) : '' ) . '</small>'; }
+    }
     if ( $column === 'menu_order' ) { echo (int) get_post_field( 'menu_order', $post_id ); }
 }, 10, 2 );
 
@@ -300,6 +305,7 @@ function am_project_data( $source ) {
         'demo' => $meta( 'demo' ), 'repository' => $meta( 'repository' ), 'links' => am_parse_links( $meta( 'links' ) ),
         'image_id' => $thumbnail ? (int) $thumbnail : ( $gallery ? (int) reset( $gallery ) : 0 ), 'image_src' => '', 'image_alt' => '',
         'gallery' => array_values( $gallery ),
+        'capture_updated' => $meta( 'capture_auto' ) === '1' ? (string) get_post_meta( $post->ID, '_am_capture_updated', true ) : '',
         'related' => array_filter( array_map( 'absint', explode( ',', $meta( 'related' ) ) ) ),
     );
 }
@@ -318,7 +324,7 @@ function am_project_data_from_seed( array $seed ) {
         'stack' => array_values( array_filter( array_map( 'trim', explode( ',', $seed['stack'] ?? '' ) ) ) ),
         'specialties' => $seed['specialties'] ?? array(), 'demo' => $seed['demo'], 'repository' => $seed['repository'],
         'features' => array(), 'challenges' => array(), 'links' => array(), 'related' => array(), 'gallery' => array(),
-        'image_id' => 0, 'image_src' => $first ? get_theme_file_uri( 'assets/image/proyectos/' . $first['file'] ) : '', 'image_alt' => $first['alt'] ?? '',
+        'capture_updated' => '', 'image_id' => 0, 'image_src' => $first ? get_theme_file_uri( 'assets/image/proyectos/' . $first['file'] ) : '', 'image_alt' => $first['alt'] ?? '',
     );
 }
 
@@ -338,6 +344,13 @@ function am_project_cover( array $project, $size = 'large', $attrs = array() ) {
         esc_attr( $project['primary_category'] ), esc_html( strtoupper( $initials ) ), esc_html( $project['title'] ),
         esc_html( implode( ' · ', array_slice( (array) $project['stack'], 0, 3 ) ) )
     );
+}
+
+/** Texto del marco de navegador: dominio público o, si no hay, la URL del repositorio. */
+function am_project_frame_label( array $project ) {
+    if ( $project['demo'] ) { return (string) wp_parse_url( $project['demo'], PHP_URL_HOST ); }
+    if ( $project['repository'] ) { return preg_replace( '~^https?://(www\.)?~', '', untrailingslashit( $project['repository'] ) ); }
+    return $project['title'];
 }
 
 function am_project_status_badge( array $project ) {
