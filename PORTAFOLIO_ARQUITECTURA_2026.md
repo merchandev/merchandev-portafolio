@@ -46,6 +46,7 @@ Se ejecuta al activar el tema, con el botón **Importar contenido del portafolio
 - Campos vacíos: se completan. Campos que conservan el texto que escribió el tema (huella en `_am_seed_snapshot`): se actualizan a la versión nueva. Cualquier otro valor es una edición tuya y se conserva.
 - Servicios: los ocho textos originales solo se sustituyen si siguen sin editar; el texto anterior queda en **Revisiones**.
 - Capturas: se suben una sola vez a la biblioteca de medios.
+- Versión 2026.10.3: portadas de Diario Mercantil y MeTransfers SaaS, y texto de resultados del SaaS actualizado (página del producto publicada).
 - Migración 2026.10.2: el proyecto «Espressivo Editorial» importado en 2026.10.1 pasa a **CMS-Editorial** en el mismo registro (la URL anterior redirige con 301), se retiran sus capturas antiguas y se borran si ya no se usan.
 
 ## Capturas automáticas (`inc/captures.php`)

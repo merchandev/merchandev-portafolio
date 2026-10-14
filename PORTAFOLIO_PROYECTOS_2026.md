@@ -8,8 +8,8 @@ Revisión del 13–14 de octubre de 2026 de los 25 repositorios de `github.com/m
 |---|---|---|---|
 | 1 | **MeTransfers Barcelona** (`metransfers.es`) | En producción | Web pública metransfers.es; más de 300 commits; PHPUnit, PHPStan, WPCS, Playwright y puerta de calidad en GitHub Actions (último run de `main` correcto, 02/10/2026). |
 | 2 | **Guía Médica Monagas** (`guiamedicamonagas` + `GUIAMEDICA_APP`) | MVP funcional | Web pública guiamedicamonagas.com; README «MVP funcional»; CI, Gitleaks, ZAP y chequeo de disponibilidad en GitHub Actions (CI correcto 07/10/2026; un run de seguridad falló el 12/10/2026). App Android solo como build de pruebas, no publicada en tiendas. |
-| 3 | **Diario Mercantil de Venezuela** | En producción | Aplicación desplegada en diariomercantil.com (en «mantenimiento programado» durante la revisión); más de 470 commits; CI correcto (12/10/2026). Sin captura: pendiente hasta que la web salga del mantenimiento (la actualización automática la tomará). |
-| 4 | **MeTransfers SaaS** (`SAAS--MT`) | En desarrollo | README: arquitectura multiempresa «en desarrollo»; los últimos runs de CI fallan; sin despliegue público. Sin captura. |
+| 3 | **Diario Mercantil de Venezuela** | En producción | Aplicación desplegada en diariomercantil.com; más de 470 commits; CI correcto (12/10/2026). Portada aportada por el autor el 14/10/2026; desde entonces la actualiza la revisión diaria. |
+| 4 | **MeTransfers SaaS** (`SAAS--MT`) | En desarrollo | README: arquitectura multiempresa «en desarrollo»; los últimos runs de CI fallan. Página de presentación publicada en transfersinbarcelona.com (marca Transfers in Barcelona) con widget de reservas de demostración; sin clientes citables. |
 | 5 | **Motores Morichal · Toyota Monagas** | En producción | Web pública mmorichal.com; QA, build verificado y empaquetado en GitHub Actions (correcto, 28/09/2026). |
 | 6 | **CMS-Editorial** (`espressivo-editorial`) | En producción | Versión 3.0.0 de marca blanca publicada el 14/10/2026; la primera instalación funciona en el portal de un diario regional. Capturas de una instalación local de prueba con contenido e imágenes de ejemplo. |
 
@@ -56,6 +56,8 @@ El repositorio público `server-e` contiene en `README.md` (sección de credenci
 | Guía Médica | guiamedicamonagas.com (escritorio y móvil) | Recortado el aviso de cookies |
 | Motores Morichal | mmorichal.com (escritorio y móvil) | — |
 | CMS-Editorial | Instalación local de prueba (portada, ajustes y móvil) | Contenido e imágenes de ejemplo, identidad neutra |
+| Diario Mercantil | Captura de diariomercantil.com aportada por el autor | Recorte a 1280×800 |
+| MeTransfers SaaS | transfersinbarcelona.com (escritorio y móvil) | — |
 
 Las capturas de MeTransfers, Guía Médica, Motores Morichal, Diario Mercantil y Merchan.Dev se actualizan solas cada 24 h cuando cambia su interfaz. Conviene confirmar con cada cliente el permiso para mostrar su web en el portafolio.
 

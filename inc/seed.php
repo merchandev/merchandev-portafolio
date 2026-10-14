@@ -11,7 +11,7 @@
  */
 if ( ! defined( 'ABSPATH' ) ) { exit; }
 
-const AM_SEED_VERSION = '2026.10.2';
+const AM_SEED_VERSION = '2026.10.3';
 
 function am_seed_categories() {
     return array(
@@ -89,7 +89,9 @@ function am_seed_projects() {
             'results' => 'Sistema desplegado en diariomercantil.com. Repositorio público con más de 470 commits.',
             'stack' => 'PHP 8, MySQL, React, TypeScript, Vite, Tailwind CSS, PHPMailer, FPDF, Docker, Traefik, Caddy, PHPUnit',
             'capture_auto' => true, 'demo' => 'https://diariomercantil.com/', 'repository' => $gh . 'Diario-Mercantil',
-            'images' => array(),
+            'images' => array(
+                array( 'file' => 'diario-mercantil-portada.webp', 'alt' => 'Portada de diariomercantil.com: «Su publicación, paso a paso», con el tipo de cambio BCV y los accesos para iniciar sesión o crear cuenta' ),
+            ),
             'related' => array( 'cms-editorial', 'guia-medica-monagas' ),
         ),
         array(
@@ -106,10 +108,14 @@ function am_seed_projects() {
             'features' => "Roles para superadministración, empresa, operador, conductor, hotel, agencia y cliente.\nMotor de reservas con tarifas por distancia o zona, suplementos y selección de vehículo.\nGestión de conductores, disponibilidad y flota.\nPagos con Redsys, facturas y recibos en PDF.\nPortales para hoteles y agencias con reservas por referido y códigos QR.\nCola de correo con reintentos, lectura de rebotes, lista de supresión y bajas.\nCampañas, listas y segmentos de contactos con métricas de envío.\nInformes y panel de analítica.",
             'challenges' => "Aislar los datos de cada empresa en todas las lecturas, escrituras y tareas en segundo plano. El modelo ya asocia las entidades a una empresa, pero el aislamiento multiempresa sigue en desarrollo y debe validarse con pruebas.\nDiseñar un sistema de correo que distinga entre mensaje en cola, aceptado por el servidor, rebotado o dado de baja.\nMantener las reglas de negocio fuera de las rutas de la interfaz para reutilizarlas desde la API y los portales.",
             'security' => 'JWT (jose), contraseñas con bcrypt, validación con Zod, limitación de peticiones, registro de auditoría y sanitización de HTML. La integración continua (lint, tipos, validación de Prisma, build y pruebas con Vitest y Playwright) está configurada en GitHub Actions y se revisa como parte del desarrollo.',
-            'results' => 'Sin despliegue público ni clientes que pueda citar todavía. Lo descrito corresponde al código del repositorio, no a una operación comercial verificada.',
+            'results' => 'La página de presentación del producto está publicada en transfersinbarcelona.com, con un widget de reservas de demostración. Todavía no hay clientes que pueda citar: lo descrito corresponde al código del repositorio, no a una operación comercial verificada.',
             'stack' => 'Next.js, React, TypeScript, PostgreSQL, Prisma, Tailwind CSS, Nodemailer, React Email, Redsys, Docker, Vitest, Playwright',
             'demo' => '', 'repository' => $gh . 'SAAS--MT',
-            'images' => array(),
+            'links' => 'Página del producto | https://transfersinbarcelona.com/',
+            'images' => array(
+                array( 'file' => 'metransfers-saas-portada.webp', 'alt' => 'Página de presentación del producto (Transfers in Barcelona): «El software que digitaliza tu empresa de traslados privados», con el widget de reservas en vivo' ),
+                array( 'file' => 'metransfers-saas-movil.webp', 'alt' => 'Vista móvil de la página de presentación del producto' ),
+            ),
             'related' => array( 'metransfers' ),
         ),
         array(

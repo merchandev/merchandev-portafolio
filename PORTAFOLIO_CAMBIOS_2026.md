@@ -1,6 +1,6 @@
 # Registro de cambios — Merchan.Dev 2026
 
-Rama `feature/portafolio-2026-reestructuracion`. Versión de contenido `2026.10.2`.
+Rama `feature/portafolio-2026-reestructuracion`. Versión de contenido `2026.10.3`.
 
 ## Punto de partida
 
@@ -54,6 +54,8 @@ Rama `feature/portafolio-2026-reestructuracion`. Versión de contenido `2026.10.
 6. `test`: pruebas de contacto, importador y navegador.
 7. `feat(capturas)`: CMS-Editorial, migración 2026.10.2 y capturas automáticas.
 8. `docs`: documentación 2026.
+9. `fix(cache)`: vaciar la caché de LiteSpeed tras migraciones y capturas nuevas.
+10. `feat(proyectos)`: portadas de Diario Mercantil y MeTransfers SaaS (contenido 2026.10.3).
 
 ## Cómo desplegar
 
