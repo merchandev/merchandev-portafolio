@@ -509,12 +509,15 @@ main { position: relative; z-index: 1; }
         align-items: center;
     }
 
-    .sidebar-nav > :nth-child(1) { order: 3; } /* Home */
-    .sidebar-nav > :nth-child(2) { order: 1; } /* Servicios */
-    .sidebar-nav > :nth-child(3) { order: 2; } /* Sobre mí */
-    .sidebar-nav > :nth-child(4) { order: 6; } /* Contacto */
-    .sidebar-nav > :nth-child(5) { order: 4; } /* Blog */
-    .sidebar-nav > :nth-child(6) { order: 5; } /* GitHub */
+    /* Barra inferior: Proyectos · Servicios · [Inicio] · Sobre mí · Contacto.
+       Blog y GitHub siguen accesibles desde el pie de página. */
+    .sidebar-nav .nav-proyectos { order: 1; }
+    .sidebar-nav .nav-servicios { order: 2; }
+    .sidebar-nav .nav-home { order: 3; }
+    .sidebar-nav .nav-sobre { order: 4; }
+    .sidebar-nav .nav-contacto { order: 5; }
+    .sidebar-nav .nav-blog,
+    .sidebar-nav .nav-github { display: none; }
 
     .nav-item {
         flex: 1;
@@ -550,10 +553,6 @@ main { position: relative; z-index: 1; }
 
     .app-sidebar:hover .nav-text {
         transform: none;
-    }
-
-    .nav-contacto {
-        display: none !important;
     }
 
     .nav-home i {

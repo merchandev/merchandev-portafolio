@@ -12,16 +12,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 // -----------------------------------------------------------------------------
 function am_disable_wp_bloat() {
     // Remove block library css
-    wp_dequeue_style( 'wp-block-library' );
-    wp_dequeue_style( 'wp-block-library-theme' );
+    if ( ! is_singular( 'proyecto' ) ) {
+        wp_dequeue_style( 'wp-block-library' );
+        wp_dequeue_style( 'wp-block-library-theme' );
+    }
     wp_dequeue_style( 'wc-blocks-style' ); // If woocommerce is active
-    
+
     // Remove global styles
     wp_dequeue_style( 'global-styles' );
-    
+
     // Remove classic theme styles
     wp_dequeue_style( 'classic-theme-styles' );
-    
+
     // Remove emojis
     remove_action( 'wp_head', 'print_emoji_detection_script', 7 );
     remove_action( 'admin_print_scripts', 'print_emoji_detection_script' );
@@ -38,27 +40,18 @@ remove_action( 'wp_body_open', 'wp_global_styles_render_svg_filters' );
 // -----------------------------------------------------------------------------
 function am_enqueue_assets() {
     $theme_version = wp_get_theme()->get( 'Version' );
-    
+
     // Main CSS
     wp_enqueue_style( 'am-main-css', get_template_directory_uri() . '/assets/css/main.css', array(), filemtime(get_template_directory() . '/assets/css/main.css') );
-    
-    // Main JS (with GSAP dependencies)
-    wp_enqueue_script( 'gsap', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js', array(), '3.12.2', true );
-    wp_enqueue_script( 'gsap-scroll', 'https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js', array('gsap'), '3.12.2', true );
-    wp_enqueue_script( 'am-main-js', get_template_directory_uri() . '/assets/js/main.js', array('gsap', 'gsap-scroll'), filemtime(get_template_directory() . '/assets/js/main.js'), true );
-    
-    // Background Animation JS
-    wp_enqueue_script( 'am-bg-anim-js', get_template_directory_uri() . '/assets/js/bg-animation.js', array(), null, true );
-    
-    // We can also pass data to JS
+
+    wp_enqueue_style('am-portfolio', get_template_directory_uri() . '/assets/css/portfolio.css', array('am-main-css'), filemtime(get_template_directory() . '/assets/css/portfolio.css'));
+    wp_enqueue_script('am-main-js', get_template_directory_uri() . '/assets/js/main.js', array(), filemtime(get_template_directory() . '/assets/js/main.js'), true);
+    wp_enqueue_script('am-bg-anim-js', get_template_directory_uri() . '/assets/js/bg-animation.js', array(), filemtime(get_template_directory() . '/assets/js/bg-animation.js'), true);
+    // Endpoint configuration
     wp_localize_script('am-main-js', 'amData', array(
         'ajax_url'    => admin_url('admin-ajax.php'),
         'nonce'       => wp_create_nonce('am_nonce'),
-        'github_repos' => array(
-            'https://api.github.com/repos/merchandev/Evento-Conexi-n-Publicitaria',
-            'https://api.github.com/repos/merchandev/radio-streaming-server',
-            'https://api.github.com/repos/merchandev/Galer-a-bento-para-entradas-en-WordPress-'
-        )
+
     ));
 }
 add_action( 'wp_enqueue_scripts', 'am_enqueue_assets' );
@@ -101,7 +94,7 @@ function am_register_servicios_cpt() {
     $args = array(
         'label'                 => 'Servicio',
         'labels'                => $labels,
-        'supports'              => array( 'title', 'editor', 'thumbnail', 'excerpt', 'custom-fields' ),
+        'supports'              => array( 'title', 'editor', 'thumbnail', 'excerpt', 'custom-fields', 'revisions' ),
         'public'                => true,
         'show_ui'               => true,
         'show_in_menu'          => true,
@@ -118,11 +111,6 @@ function am_register_servicios_cpt() {
     );
     register_post_type( 'servicio', $args );
 
-    // Flush rewrite rules once to make sure /servicios/ works
-    if ( ! get_option( 'am_cpt_flushed' ) ) {
-        flush_rewrite_rules();
-        update_option( 'am_cpt_flushed', true );
-    }
 }
 add_action( 'init', 'am_register_servicios_cpt', 0 );
 
@@ -130,15 +118,15 @@ add_action( 'init', 'am_register_servicios_cpt', 0 );
 // 4.1 AJAX Search
 // -----------------------------------------------------------------------------
 function am_ajax_search() {
-    check_ajax_referer('am_nonce', 'security');
-    
-    $query = sanitize_text_field($_POST['query']);
+    // Búsqueda pública de solo lectura: sin nonce, porque las páginas cacheadas (LiteSpeed/CDN)
+    // sirven nonces caducados y la búsqueda dejaba de funcionar. Solo devuelve contenido publicado.
+    $query = sanitize_text_field(wp_unslash(isset($_POST['query']) && is_string($_POST['query']) ? $_POST['query'] : ''));
     if(strlen($query) < 2) {
         wp_send_json_success(array());
     }
 
     $args = array(
-        'post_type' => array('post', 'page', 'servicio'),
+        'post_type' => array('post', 'page', 'servicio', 'proyecto'),
         'post_status' => 'publish',
         's' => $query,
         'posts_per_page' => 5
@@ -150,9 +138,10 @@ function am_ajax_search() {
     if ($search_query->have_posts()) {
         while ($search_query->have_posts()) {
             $search_query->the_post();
-            
+
             $icon = 'bx-file';
             if (get_post_type() == 'servicio') $icon = 'bx-cube-alt';
+            if (get_post_type() == 'proyecto') $icon = 'bx-code-block';
             if (get_post_type() == 'post') $icon = 'bx-news';
 
             $results[] = array(
@@ -178,7 +167,28 @@ function am_auto_create_services() {
         return;
     }
 
-    $services = array(
+    foreach ( am_legacy_services() as $svc ) {
+        $existing = get_page_by_path( $svc['post_name'], OBJECT, 'servicio' );
+        if ( ! $existing ) {
+            wp_insert_post( array(
+                'post_title'    => $svc['post_title'],
+                'post_name'     => $svc['post_name'],
+                'post_content'  => $svc['post_content'],
+                'post_status'   => 'publish',
+                'post_type'     => 'servicio',
+            ) );
+        }
+    }
+
+    update_option( 'am_services_created', true );
+}
+
+/**
+ * Textos originales con los que el tema creó los servicios. Se conservan para que el
+ * importador 2026 detecte si un servicio sigue sin editar antes de actualizar su texto.
+ */
+function am_legacy_services() {
+    return array(
         array(
             'post_title' => 'Desarrollo SaaS y Arquitectura de Microservicios',
             'post_name'  => 'desarrollo-saas-microservicios',
@@ -220,33 +230,14 @@ function am_auto_create_services() {
             'post_content' => '<!-- wp:heading {"level":2} --><h2>Resiliencia de hardware para que tu operación técnica nunca se detenga.</h2><!-- /wp:heading --><!-- wp:heading {"level":3} --><h3>Qué ofreces aquí</h3><!-- /wp:heading --><!-- wp:paragraph --><p>Asesoría en ensamblaje de configuraciones multi-PC, recuperación ante fallos (configuraciones de pérdida de CA en BIOS/UEFI) y cálculo/despliegue de sistemas de respaldo energético portátiles o a gasolina.</p><!-- /wp:paragraph --><!-- wp:heading {"level":3} --><h3>Cliente ideal</h3><!-- /wp:heading --><!-- wp:paragraph --><p>Profesionales independientes, streamers o pequeñas oficinas que no pueden permitirse tiempos de inactividad por fallos eléctricos o de hardware.</p><!-- /wp:paragraph -->'
         )
     );
-
-    foreach ( $services as $svc ) {
-        $existing = get_page_by_path( $svc['post_name'], OBJECT, 'servicio' );
-        if ( ! $existing ) {
-            wp_insert_post( array(
-                'post_title'    => $svc['post_title'],
-                'post_name'     => $svc['post_name'],
-                'post_content'  => $svc['post_content'],
-                'post_status'   => 'publish',
-                'post_type'     => 'servicio',
-            ) );
-        }
-    }
-
-    update_option( 'am_services_created', true );
 }
-add_action( 'init', 'am_auto_create_services' );
+
 
 // -----------------------------------------------------------------------------
 // 6. Auto-Generate Main Pages (One-time)
 // -----------------------------------------------------------------------------
 function am_auto_create_pages() {
-    // Commented out to force run this time
-    // if ( get_option( 'am_pages_created_v2' ) ) {
-    //     return;
-    // }
-
+    if ( get_option( 'am_pages_created' ) ) { return; }
     $pages = array(
         array(
             'post_title' => 'Servicios',
@@ -285,7 +276,7 @@ function am_auto_create_pages() {
 
     update_option( 'am_pages_created', true );
 }
-add_action( 'init', 'am_auto_create_pages' );
+
 
 // -----------------------------------------------------------------------------
 // 7. Order Servicios Archive
@@ -342,35 +333,13 @@ add_action( 'init', 'am_register_leads_cpt', 0 );
 // -----------------------------------------------------------------------------
 // 9. AJAX Form Submission for Leads
 // -----------------------------------------------------------------------------
-function am_handle_contact_form() {
-    check_ajax_referer('am_nonce', 'security');
-
-    $name    = isset($_POST['name']) ? sanitize_text_field( $_POST['name'] ) : '';
-    $email   = isset($_POST['email']) ? sanitize_email( $_POST['email'] ) : '';
-    $service = isset($_POST['service']) ? sanitize_text_field( $_POST['service'] ) : '';
-    $message = isset($_POST['message']) ? sanitize_textarea_field( $_POST['message'] ) : '';
-
-    if ( empty($name) || empty($email) || empty($message) ) {
-        wp_send_json_error( 'Faltan campos obligatorios.' );
-    }
-
-    $post_id = wp_insert_post( array(
-        'post_title'   => $name . ' (' . $service . ')',
-        'post_content' => "Email de contacto: $email\nServicio de interés: $service\n\nContenido del mensaje:\n$message",
-        'post_status'  => 'publish', // Publish so it's visible in admin immediately
-        'post_type'    => 'lead'
-    ) );
-
-    if ( $post_id && !is_wp_error($post_id) ) {
-        update_post_meta( $post_id, '_lead_email', $email );
-        update_post_meta( $post_id, '_lead_service', $service );
-        wp_send_json_success( 'Mensaje enviado correctamente. Me pondré en contacto pronto.' );
-    } else {
-        wp_send_json_error( 'Error interno al procesar el mensaje.' );
-    }
-}
-add_action('wp_ajax_am_submit_contact', 'am_handle_contact_form');
-add_action('wp_ajax_nopriv_am_submit_contact', 'am_handle_contact_form');
+require_once get_template_directory() . '/inc/contact.php';
+require_once get_template_directory() . '/inc/projects.php';
+require_once get_template_directory() . '/inc/specialties.php';
+require_once get_template_directory() . '/inc/capabilities.php';
+require_once get_template_directory() . '/inc/seed.php';
+require_once get_template_directory() . '/inc/seo.php';
+require_once get_template_directory() . '/inc/captures.php';
 
 
 
@@ -418,100 +387,14 @@ function am_create_legal_pages() {
 add_action( 'after_switch_theme', 'am_create_legal_pages' );
 
 // Also run once on init (guarded by option) so already-active installs get the pages too
-function am_create_legal_pages_once() {
-    if ( ! get_option( 'am_legal_pages_created' ) ) {
-        am_create_legal_pages();
-        update_option( 'am_legal_pages_created', '1' );
-    }
-}
-add_action( 'init', 'am_create_legal_pages_once' );
+
+
 
 // -----------------------------------------------------------------------------
 // 13. Poblar post_content de páginas para Yoast SEO (una sola vez)
 // -----------------------------------------------------------------------------
-function am_populate_seo_content() {
-    if ( get_option( 'am_seo_content_v1' ) ) return;
+// Page content is edited in WordPress; never overwritten by this theme.
 
-    $pages_content = array(
-
-        // ---- HOME / FRONT PAGE ----
-        'front-page' => array(
-            'title'   => 'Inicio',
-            'content' =>
-                '<!-- wp:heading {"level":1} --><h1>Arturo Merchán — Programador Full-Stack</h1><!-- /wp:heading -->' .
-                '<!-- wp:paragraph --><p>Diseñando arquitecturas escalables, ecosistemas SaaS y experiencias web de alto rendimiento. 10 años transformando complejidad técnica en soluciones de negocio robustas.</p><!-- /wp:paragraph -->' .
-                '<!-- wp:heading {"level":2} --><h2>Sobre mí</h2><!-- /wp:heading -->' .
-                '<!-- wp:paragraph --><p>Soy un Programador Full-Stack con una década de experiencia en el sector tecnológico. Mi enfoque se centra en construir puentes entre el desarrollo front-end avanzado y las arquitecturas de servidores resilientes. No solo escribo código; diseño infraestructuras preparadas para el futuro.</p><!-- /wp:paragraph -->' .
-                '<!-- wp:heading {"level":2} --><h2>Mis Servicios</h2><!-- /wp:heading -->' .
-                '<!-- wp:paragraph --><p>Desarrollo SaaS y Arquitectura de Microservicios. Configuración de Servidores para Streaming de Audio y Video. Administración de Servidores VPS y DevOps. Desarrollo Avanzado en WordPress. Soluciones E-commerce y Migración de Plataformas. SEO Técnico y Crecimiento Orgánico Hiperlocal. Consultoría en Integración de IA y Rendimiento Web. Continuidad Operativa e Infraestructura Física.</p><!-- /wp:paragraph -->' .
-                '<!-- wp:heading {"level":2} --><h2>Stack Tecnológico</h2><!-- /wp:heading -->' .
-                '<!-- wp:paragraph --><p>Lenguajes y Front-End: TypeScript, JavaScript, React, Astro, PHP, HTML5, CSS3, Tailwind CSS, WebGL. Back-End y Bases de Datos: Python, Microservicios, MySQL, MariaDB, MongoDB. DevOps y Servidores: Linux, Bash, Docker, Traefik, Nginx, Hostinger VPS.</p><!-- /wp:paragraph -->',
-        ),
-
-        // ---- SOBRE MÍ ----
-        'sobre-mi' => array(
-            'title'   => 'Sobre mí',
-            'content' =>
-                '<!-- wp:heading {"level":1} --><h1>De la infraestructura al píxel — Perfil Profesional</h1><!-- /wp:heading -->' .
-                '<!-- wp:paragraph --><p>Soy Arturo Merchán, Programador Full-Stack con más de 10 años de experiencia en desarrollo web. Me especializo en el ecosistema de WordPress, PHP, y desarrollo de bases de datos, combinando habilidades en frontend (TypeScript, Tailwind CSS) y backend para crear soluciones tecnológicas a medida.</p><!-- /wp:paragraph -->' .
-                '<!-- wp:paragraph --><p>Mi enfoque se centra en la implementación de diseños precisos, optimización de rendimiento (SEO técnico) y la entrega puntual bajo un modelo de trabajo estructurado y eficiente.</p><!-- /wp:paragraph -->' .
-                '<!-- wp:heading {"level":2} --><h2>Experiencia Profesional</h2><!-- /wp:heading -->' .
-                '<!-- wp:paragraph --><p>Programador Full Stack en Me Transfers (Barcelona, España) — Diciembre 2025 – Presente. Desarrollo y mantenimiento de un sistema de reservas especializado para traslados y tours desde y hacia Barcelona.</p><!-- /wp:paragraph -->' .
-                '<!-- wp:paragraph --><p>Desarrollador Web en Motores Morichal (Maturín, Venezuela) — Agosto 2025 – Presente. Desarrollo integral del tema para el sitio web, incluyendo la implementación de plugins personalizados para formularios y la administración del inventario de vehículos.</p><!-- /wp:paragraph -->' .
-                '<!-- wp:paragraph --><p>Programador Full Stack y Cofundador en Espressivo Venezuela (Maturín, Venezuela) — Octubre 2018 – Presente. Cofundador de la marca, encargado de proveer soluciones tecnológicas integrales y personalizadas para clientes.</p><!-- /wp:paragraph -->' .
-                '<!-- wp:paragraph --><p>Desarrollador Full Stack WordPress en Panalcom (Colombia) — Marzo 2025 – Noviembre 2025. Desarrollo de soluciones web personalizadas para el sector B2B, levantamiento y administración de servidores, configuración de entornos seguros. Creación de plugins y temas a medida, integración de CRMs, pasarelas de pago y automatizaciones. Optimización de rendimiento, estructura SEO y construcción de interfaces con Elementor.</p><!-- /wp:paragraph -->' .
-                '<!-- wp:paragraph --><p>Desarrollador Web en Academy Producciones (México) — Marzo 2020 – Febrero 2025.</p><!-- /wp:paragraph -->' .
-                '<!-- wp:paragraph --><p>Diseñador de Páginas Web en Neuropublicidad (Chile) — Febrero 2017 – Febrero 2020. Desarrollo de E-commerce en WordPress utilizando WooCommerce y gestión estratégica de campañas en Google Ads.</p><!-- /wp:paragraph -->' .
-                '<!-- wp:heading {"level":2} --><h2>Educación y Certificaciones</h2><!-- /wp:heading -->' .
-                '<!-- wp:paragraph --><p>Diplomado en Database Developer — Diplomados online (Mayo 2026 – Septiembre 2026). Máster SEO — BIG school (Marzo 2026 – Julio 2026). Máster de Funnel de Ventas — BIG school (Marzo 2026 – Julio 2026). Máster de Desarrollo con IA — BIG school (Marzo 2026 – Junio 2026). Mastering Laravel Framework and PHP — Coursera (2020 – 2023). Full Stack con WordPress — Platzi (2023). Licenciatura en Contaduría Pública — Universidad de Oriente, Venezuela (2015 – 2022).</p><!-- /wp:paragraph -->' .
-                '<!-- wp:heading {"level":2} --><h2>Stack Tecnológico</h2><!-- /wp:heading -->' .
-                '<!-- wp:paragraph --><p>Lenguajes y Front-End: TypeScript, JavaScript, React, Astro, PHP, HTML5, CSS3, Tailwind CSS, JSON, WebGL, Liquid, Twig. Back-End y Bases de Datos: Python, Microservicios, MySQL, MariaDB, MongoDB. Versiones y CI/CD: Git, GitHub Actions. DevOps y Servidores: Linux, Bash, PowerShell, Docker, Dockerfile, Traefik, Nginx, Hostinger VPS.</p><!-- /wp:paragraph -->',
-        ),
-
-        // ---- CONTACTO ----
-        'contacto' => array(
-            'title'   => 'Contacto',
-            'content' =>
-                '<!-- wp:heading {"level":1} --><h1>¿Listo para escalar tu infraestructura o construir tu próximo SaaS?</h1><!-- /wp:heading -->' .
-                '<!-- wp:paragraph --><p>Ya sea que necesites una administración experta de tu VPS, una migración compleja o el desarrollo de una plataforma desde cero, hablemos de cómo la tecnología adecuada puede acelerar tu negocio.</p><!-- /wp:paragraph -->' .
-                '<!-- wp:paragraph --><p>Disponible para consultoría. Clases de programación. Auditorías técnicas de sitios web.</p><!-- /wp:paragraph -->' .
-                '<!-- wp:heading {"level":2} --><h2>Servicios disponibles para contratar</h2><!-- /wp:heading -->' .
-                '<!-- wp:paragraph --><p>SaaS y Web App, Administración de Servidores y VPS, Migración E-commerce, SEO Técnico, Desarrollo Avanzado en WordPress, Consultoría general.</p><!-- /wp:paragraph -->',
-        ),
-
-        // ---- SERVICIOS (archive/listado) ----
-        'servicios' => array(
-            'title'   => 'Servicios',
-            'content' =>
-                '<!-- wp:heading {"level":1} --><h1>Servicios Profesionales de Desarrollo Web</h1><!-- /wp:heading -->' .
-                '<!-- wp:paragraph --><p>Explora el catálogo completo de soluciones tecnológicas, desde arquitectura SaaS hasta continuidad operativa. Ofrezco servicios especializados en desarrollo web, administración de servidores, SEO técnico, e-commerce, inteligencia artificial y streaming digital.</p><!-- /wp:paragraph -->' .
-                '<!-- wp:paragraph --><p>Desarrollo SaaS y Arquitectura de Microservicios. Configuración de Servidores para Streaming de Audio y Video. Administración de Servidores VPS y DevOps. Desarrollo Avanzado en WordPress. Soluciones E-commerce y Migración de Plataformas. SEO Técnico y Crecimiento Orgánico Hiperlocal. Consultoría en Integración de IA y Rendimiento Web. Continuidad Operativa e Infraestructura Física.</p><!-- /wp:paragraph -->',
-        ),
-    );
-
-    foreach ( $pages_content as $slug => $data ) {
-        // Try by slug first
-        $page = get_page_by_path( $slug );
-
-        // For front-page, get by the page_on_front option
-        if ( ! $page && $slug === 'front-page' ) {
-            $front_id = get_option( 'page_on_front' );
-            if ( $front_id ) {
-                $page = get_post( $front_id );
-            }
-        }
-
-        if ( $page && $page->ID ) {
-            wp_update_post( array(
-                'ID'           => $page->ID,
-                'post_content' => $data['content'],
-            ) );
-        }
-    }
-
-    update_option( 'am_seo_content_v1', '1' );
-}
-add_action( 'init', 'am_populate_seo_content' );
 
 // -----------------------------------------------------------------------------
 // 14. Filtro por Año en el Blog
@@ -519,8 +402,8 @@ add_action( 'init', 'am_populate_seo_content' );
 function am_filter_blog_by_year( $query ) {
     if ( ! is_admin() && $query->is_main_query() && $query->is_home() ) {
         // Obtener el año de la URL o por defecto 2026
-        $year = isset($_GET['filtro_ano']) ? intval($_GET['filtro_ano']) : 2026;
-        $query->set( 'year', $year );
+        $year = isset($_GET['filtro_ano']) ? absint($_GET['filtro_ano']) : 0;
+        if ($year) { $query->set('year', $year); }
     }
 }
 add_action( 'pre_get_posts', 'am_filter_blog_by_year' );
@@ -529,9 +412,9 @@ add_action( 'pre_get_posts', 'am_filter_blog_by_year' );
 // 15. AJAX Endpoint para filtrar el blog por año sin recargar
 // -----------------------------------------------------------------------------
 function am_ajax_filter_blog() {
-    check_ajax_referer('am_nonce', 'security');
-    $year = isset($_POST['year']) ? intval($_POST['year']) : 2026;
-    $paged = isset($_POST['paged']) ? intval($_POST['paged']) : 1;
+    // Filtro público de solo lectura (ver am_ajax_search): no requiere nonce.
+    $year = isset($_POST['year']) ? absint($_POST['year']) : 0;
+    $paged = isset($_POST['paged']) ? max(1, absint($_POST['paged'])) : 1;
 
     $args = array(
         'post_type' => 'post',
@@ -589,7 +472,7 @@ function am_ajax_filter_blog() {
             'next_text' => __('Siguiente', 'textdomain'),
         ));
         $pagination_links = ob_get_clean();
-        
+
         $pagination = '<h2 class="screen-reader-text">Más artículos</h2><div class="nav-links">' . $pagination_links . '</div>';
     }
 

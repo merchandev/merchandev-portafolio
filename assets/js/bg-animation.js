@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!canvas) return;
 
     const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+    let frame = null;
 
     let width, height;
     let particles = [];
@@ -10,6 +12,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Dragon Ball themed colors
     // Goku Orange: #FF7A00, SSJ Yellow: #FFD700, Vegeta Blue: #0052C2
     const colors = ['rgba(255, 122, 0, 0.6)', 'rgba(255, 215, 0, 0.6)', 'rgba(0, 82, 194, 0.4)', 'rgba(255, 255, 255, 0.2)'];
+
+    const LINK_DISTANCE = 150;
+    const LINK_DISTANCE_SQ = LINK_DISTANCE * LINK_DISTANCE;
+    const BUCKETS = 8; // Las líneas se agrupan por opacidad: un stroke por grupo en lugar de uno por línea.
+    // Equipos modestos (pocos núcleos) dibujan menos partículas; el aspecto se mantiene.
+    const density = (navigator.hardwareConcurrency || 8) <= 4 ? 0.7 : 1;
 
     const mouse = {
         x: null,
@@ -20,19 +28,18 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('mousemove', (event) => {
         mouse.x = event.clientX;
         mouse.y = event.clientY;
-    });
+    }, { passive: true });
 
     window.addEventListener('mouseout', () => {
         mouse.x = null;
         mouse.y = null;
-    });
+    }, { passive: true });
 
     function resize() {
         width = canvas.width = window.innerWidth;
         height = canvas.height = window.innerHeight;
     }
 
-    window.addEventListener('resize', resize);
     resize();
 
     class Particle {
@@ -54,13 +61,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 const dx = mouse.x - this.x;
                 const dy = mouse.y - this.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
-                if (distance < mouse.radius) {
-                    const forceDirectionX = dx / distance;
-                    const forceDirectionY = dy / distance;
+                if (distance > 0 && distance < mouse.radius) {
                     const force = (mouse.radius - distance) / mouse.radius;
                     // Move particle away from mouse
-                    this.x -= forceDirectionX * force * 3;
-                    this.y -= forceDirectionY * force * 3;
+                    this.x -= (dx / distance) * force * 3;
+                    this.y -= (dy / distance) * force * 3;
                 }
             }
 
@@ -78,50 +83,67 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function init() {
         particles = [];
-        const numParticles = Math.min(Math.floor((width * height) / 10000), 100);
+        const numParticles = Math.floor(Math.min(Math.floor((width * height) / 10000), 100) * density);
         for (let i = 0; i < numParticles; i++) {
             particles.push(new Particle());
         }
     }
 
+    const linkBuckets = Array.from({ length: BUCKETS }, () => []);
+    const mouseBuckets = Array.from({ length: BUCKETS }, () => []);
+
+    function strokeBuckets(buckets, color, maxAlpha, lineWidth) {
+        ctx.lineWidth = lineWidth;
+        for (let b = 0; b < BUCKETS; b++) {
+            const segments = buckets[b];
+            if (!segments.length) continue;
+            ctx.beginPath();
+            for (let s = 0; s < segments.length; s += 4) {
+                ctx.moveTo(segments[s], segments[s + 1]);
+                ctx.lineTo(segments[s + 2], segments[s + 3]);
+            }
+            ctx.strokeStyle = `rgba(${color}, ${maxAlpha * (b + 0.5) / BUCKETS})`;
+            ctx.stroke();
+            segments.length = 0;
+        }
+    }
+
     function animate() {
         ctx.clearRect(0, 0, width, height);
+        const hasMouse = mouse.x != null && mouse.y != null;
+        const mouseRadiusSq = mouse.radius * mouse.radius;
 
         for (let i = 0; i < particles.length; i++) {
-            particles[i].update();
-            particles[i].draw();
+            const p = particles[i];
+            p.update();
+            p.draw();
 
-            // Draw connecting lines
+            // Connecting lines
             for (let j = i + 1; j < particles.length; j++) {
-                const dx = particles[i].x - particles[j].x;
-                const dy = particles[i].y - particles[j].y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
-
-                if (dist < 150) {
-                    ctx.beginPath();
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(particles[j].x, particles[j].y);
-                    ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 * (1 - dist / 150)})`;
-                    ctx.lineWidth = 0.5;
-                    ctx.stroke();
+                const q = particles[j];
+                const dx = p.x - q.x;
+                const dy = p.y - q.y;
+                const distSq = dx * dx + dy * dy;
+                if (distSq < LINK_DISTANCE_SQ) {
+                    const strength = 1 - Math.sqrt(distSq) / LINK_DISTANCE;
+                    linkBuckets[Math.min(BUCKETS - 1, Math.floor(strength * BUCKETS))].push(p.x, p.y, q.x, q.y);
                 }
             }
 
             // Connection to mouse
-            if (mouse.x != null && mouse.y != null) {
-                const dxMouse = particles[i].x - mouse.x;
-                const dyMouse = particles[i].y - mouse.y;
-                const distMouse = Math.sqrt(dxMouse * dxMouse + dyMouse * dyMouse);
-                if (distMouse < mouse.radius) {
-                    ctx.beginPath();
-                    ctx.moveTo(particles[i].x, particles[i].y);
-                    ctx.lineTo(mouse.x, mouse.y);
-                    ctx.strokeStyle = `rgba(255, 122, 0, ${0.3 * (1 - distMouse / mouse.radius)})`;
-                    ctx.lineWidth = 1;
-                    ctx.stroke();
+            if (hasMouse) {
+                const dxMouse = p.x - mouse.x;
+                const dyMouse = p.y - mouse.y;
+                const distMouseSq = dxMouse * dxMouse + dyMouse * dyMouse;
+                if (distMouseSq < mouseRadiusSq) {
+                    const strength = 1 - Math.sqrt(distMouseSq) / mouse.radius;
+                    mouseBuckets[Math.min(BUCKETS - 1, Math.floor(strength * BUCKETS))].push(p.x, p.y, mouse.x, mouse.y);
                 }
             }
         }
+
+        strokeBuckets(linkBuckets, '255, 255, 255', 0.1, 0.5);
+        if (hasMouse) strokeBuckets(mouseBuckets, '255, 122, 0', 0.3, 1);
 
         // Draw "Nebula" subtle glows
         const time = Date.now() * 0.0005;
@@ -145,19 +167,31 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.fillStyle = vegetaGlow;
         ctx.fillRect(0, 0, width, height);
 
+        frame = requestAnimationFrame(animate);
+    }
 
-        requestAnimationFrame(animate);
+    function drawStatic() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(p => p.draw());
     }
 
     // Respect user's reduced motion preference
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (!prefersReducedMotion.matches) {
-        init();
-        animate();
-    } else {
-        // Fallback static draw
-        init();
-        ctx.clearRect(0, 0, width, height);
-        particles.forEach(p => p.draw());
-    }
+    const updateMotion = () => {
+        if (frame !== null) { cancelAnimationFrame(frame); frame = null; }
+        if (prefersReducedMotion.matches) { drawStatic(); return; }
+        if (!document.hidden) animate();
+    };
+    document.addEventListener('visibilitychange', updateMotion);
+    prefersReducedMotion.addEventListener('change', updateMotion);
+
+    // Redimensionar regenera las partículas una sola vez cuando termina el cambio de tamaño.
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => { resize(); init(); if (prefersReducedMotion.matches) drawStatic(); }, 150);
+    }, { passive: true });
+
+    init();
+    updateMotion();
 });

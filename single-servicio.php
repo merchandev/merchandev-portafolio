@@ -1,71 +1,78 @@
 <?php
 /**
- * Template for Single Service (Landing Page)
+ * Servicio: especialidad principal o servicio específico. El texto se edita en WordPress;
+ * la relación con la especialidad, los proyectos de evidencia y el contacto se generan aquí.
  */
-get_header(); ?>
-
-<main class="service-landing">
-    <?php while ( have_posts() ) : the_post(); ?>
-        
-        <!-- Hero Section para el Servicio -->
-        <section class="hero-section" style="min-height: 60vh; padding: 160px 0 60px;">
-            <div class="aura-effect"></div>
-            <div class="container" style="position: relative; z-index: 2;">
-                <div class="hero-content" style="max-width: 900px; text-align: left; align-items: flex-start;">
-                    <a href="<?php echo home_url('/'); ?>" style="display: inline-flex; align-items: center; gap: 0.5rem; color: var(--color-text-muted); margin-bottom: 2rem; font-size: 0.9rem;">
-                        <i class='bx bx-left-arrow-alt'></i> Volver al inicio
-                    </a>
-                    <span class="hero-tag fade-up">Servicio Especializado</span>
-                    <h1 class="hero-title fade-up delay-100" style="font-size: clamp(2.5rem, 5vw, 4rem); text-align: left;">
-                        <?php the_title(); ?>
-                    </h1>
-                </div>
+get_header();
+while ( have_posts() ) :
+    the_post();
+    $slug = get_post_field( 'post_name', get_post() );
+    $specialties = am_specialties();
+    $specialty_key = am_specialty_by_slug( $slug );
+    $parent_key = $specialty_key ? null : am_specialty_for_service( $slug );
+    $key = $specialty_key ?: $parent_key;
+    $specialty = $key ? $specialties[ $key ] : null;
+    $evidence = $key ? am_specialty_projects( $key, 4 ) : array();
+    ?>
+<article class="service-landing" aria-labelledby="service-title">
+    <section class="hero-section service-hero">
+        <div class="aura-effect"></div>
+        <div class="container" style="position: relative; z-index: 2;">
+            <div class="hero-content service-hero-content">
+                <nav class="breadcrumbs" aria-label="Migas de pan">
+                    <a href="<?php echo esc_url( home_url( '/' ) ); ?>">Inicio</a><span aria-hidden="true">/</span>
+                    <a href="<?php echo esc_url( home_url( '/servicios/' ) ); ?>">Servicios</a><span aria-hidden="true">/</span>
+                    <?php if ( $parent_key ) : ?><a href="<?php echo esc_url( am_service_url( $specialty['slug'] ) ); ?>"><?php echo esc_html( $specialty['short'] ); ?></a><span aria-hidden="true">/</span><?php endif; ?>
+                    <span aria-current="page"><?php the_title(); ?></span>
+                </nav>
+                <span class="hero-tag fade-up"><?php echo $specialty_key ? ( $specialty['principal'] ? 'Especialidad principal' : 'Especialidad' ) : ( $parent_key ? 'Parte de: ' . esc_html( $specialty['short'] ) : 'Servicio' ); ?></span>
+                <h1 id="service-title" class="hero-title fade-up delay-100"><?php the_title(); ?></h1>
+                <?php if ( has_excerpt() ) : ?><p class="hero-text fade-up delay-200"><?php echo esc_html( get_the_excerpt() ); ?></p><?php endif; ?>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- Contenido del Servicio -->
-        <section class="section-padding bg-darker">
-            <div class="container">
-                <div class="grid-2">
-                    <div class="service-content glass-card scroll-reveal" style="padding: 3rem;">
-                        <?php 
-                        // The content is pre-formatted with H2, H3 and paragraphs
-                        the_content(); 
-                        ?>
-                    </div>
-                    
-                    <div class="service-sidebar scroll-reveal delay-100">
-                        <div class="glass-card flex-column" style="position: sticky; top: 120px;">
-                            <h3 style="color: var(--color-goku-orange); margin-bottom: 1.5rem;">¿Necesitas este servicio?</h3>
-                            <p style="color: var(--color-text-muted); margin-bottom: 2rem;">Hablemos sobre los requerimientos técnicos de tu proyecto y cómo puedo ayudarte a escalarlo.</p>
-                            
-                            <a href="<?php echo home_url('/contacto/?servicio=' . urlencode(get_the_title())); ?>" class="btn-primary" style="width: 100%; justify-content: center;">
-                                <i class='bx bx-envelope'></i> Solicitar Presupuesto
-                            </a>
-                            
-                            <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--color-border);">
-                                <p style="font-size: 0.9rem; color: var(--color-text-muted); display: flex; align-items: center; gap: 0.5rem;">
-                                    <i class='bx bx-check-circle' style="color: var(--color-goku-orange);"></i> Respuesta en 24-48 horas
-                                </p>
-                                <p style="font-size: 0.9rem; color: var(--color-text-muted); display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
-                                    <i class='bx bx-check-circle' style="color: var(--color-goku-orange);"></i> Consultoría técnica inicial
-                                </p>
-                            </div>
+    <section class="section-padding bg-darker">
+        <div class="container">
+            <div class="service-layout">
+                <div class="service-content glass-card scroll-reveal">
+                    <?php the_content(); ?>
+                    <?php if ( $evidence ) : ?>
+                        <h3>Qué evidencias tengo</h3>
+                        <p>Proyectos donde apliqué esta especialidad, con su estado real y enlaces verificables:</p>
+                        <ul class="evidence-list">
+                            <?php foreach ( $evidence as $project ) : ?>
+                            <li><a href="<?php echo esc_url( $project['url'] ); ?>"><?php echo esc_html( $project['title'] ); ?></a><?php if ( $project['status_label'] ) : ?> · <span><?php echo esc_html( $project['status_label'] ); ?></span><?php endif; ?><br><small><?php echo esc_html( wp_trim_words( $project['excerpt'], 22, '…' ) ); ?></small></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php endif; ?>
+                </div>
+
+                <aside class="service-sidebar scroll-reveal delay-100" aria-label="Contacto y servicios relacionados">
+                    <div class="glass-card flex-column service-sticky">
+                        <h2 class="service-aside-title">¿Encaja con tu proyecto?</h2>
+                        <p>Cuéntame qué necesitas resolver y en qué punto estás. Respondo personalmente cada solicitud.</p>
+                        <a href="<?php echo esc_url( add_query_arg( 'interes', $slug, home_url( '/contacto/' ) ) ); ?>" class="btn-primary">
+                            <i class="bx bx-envelope" aria-hidden="true"></i> Cómo contactar conmigo
+                        </a>
+                        <?php if ( $specialty ) : ?>
+                        <div class="service-related">
+                            <?php if ( $specialty_key ) : $services = array_filter( $specialty['services'], 'am_service_exists' ); if ( $services ) : ?>
+                                <p class="mini-heading">Servicios específicos</p>
+                                <ul class="link-list"><?php foreach ( $services as $service_slug ) : $service = get_page_by_path( $service_slug, OBJECT, 'servicio' ); ?><li><a href="<?php echo esc_url( get_permalink( $service ) ); ?>"><?php echo esc_html( get_the_title( $service ) ); ?></a></li><?php endforeach; ?></ul>
+                            <?php endif; else : ?>
+                                <p class="mini-heading">Especialidad</p>
+                                <ul class="link-list"><li><a href="<?php echo esc_url( am_service_url( $specialty['slug'] ) ); ?>"><?php echo esc_html( $specialty['title'] ); ?></a></li></ul>
+                            <?php endif; ?>
+                            <p class="mini-heading">Otras especialidades</p>
+                            <ul class="link-list"><?php foreach ( $specialties as $other_key => $other ) : if ( $other_key === $key ) { continue; } ?><li><a href="<?php echo esc_url( am_service_url( $other['slug'] ) ); ?>"><?php echo esc_html( $other['title'] ); ?></a></li><?php endforeach; ?></ul>
                         </div>
+                        <?php endif; ?>
                     </div>
-                </div>
+                </aside>
             </div>
-        </section>
-
-    <?php endwhile; ?>
-</main>
-
-<style>
-.service-content h2 { font-size: 2rem; margin-bottom: 2rem; line-height: 1.3; color: var(--color-text-main); }
-.service-content h3 { font-size: 1.5rem; margin-top: 2.5rem; margin-bottom: 1rem; color: var(--color-goku-orange); }
-.service-content p { color: var(--color-text-muted); font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem; }
-.service-content ul { color: var(--color-text-muted); font-size: 1.1rem; line-height: 1.8; padding-left: 1.5rem; margin-bottom: 1.5rem; }
-.service-content li { margin-bottom: 0.8rem; }
-</style>
-
+        </div>
+    </section>
+</article>
+<?php endwhile; ?>
 <?php get_footer(); ?>
